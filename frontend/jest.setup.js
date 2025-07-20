@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import React from "react";
 
 // Mock Next.js router
 jest.mock("next/router", () => ({
@@ -47,32 +48,15 @@ jest.mock("next/navigation", () => ({
 
 // Mock framer-motion
 jest.mock("framer-motion", () => ({
-  motion: {
-    div: "div",
-    section: "section",
-    article: "article",
-    header: "header",
-    main: "main",
-    aside: "aside",
-    footer: "footer",
-    nav: "nav",
-    ul: "ul",
-    li: "li",
-    h1: "h1",
-    h2: "h2",
-    h3: "h3",
-    h4: "h4",
-    h5: "h5",
-    h6: "h6",
-    p: "p",
-    span: "span",
-    a: "a",
-    button: "button",
-    form: "form",
-    input: "input",
-    textarea: "textarea",
-    img: "img",
-  },
+  motion: new Proxy({}, {
+    get: (target, prop) => {
+      // Return a component that filters out framer-motion props
+      return function MockMotionComponent({ children, whileHover, whileTap, whileInView, initial, animate, transition, variants, ...props }) {
+        const { createElement } = require('react');
+        return createElement(prop, props, children);
+      };
+    }
+  }),
   AnimatePresence: ({ children }) => children,
   useAnimation: () => ({
     start: jest.fn(),
