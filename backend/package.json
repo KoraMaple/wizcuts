@@ -19,7 +19,7 @@
     "test:coverage": "jest --coverage --coverageReporters=text-lcov --coverageReporters=html --coverageReporters=json",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "db:generate": "drizzle-kit generate:pg",
+    "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:drop": "drizzle-kit drop"
@@ -113,7 +113,7 @@
       }
     },
     "testEnvironment": "node",
-    "moduleNameMapping": {
+    "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/src/$1"
     },
     "setupFilesAfterEnv": ["<rootDir>/test/setup.ts"]

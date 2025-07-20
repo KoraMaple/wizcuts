@@ -18,7 +18,7 @@ import { env } from './config/environment';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: '../../.env',
     }),
   ],
   controllers: [AppController, BarberController],
