@@ -19,6 +19,9 @@ jest.mock('fs', () => ({
   },
   existsSync: jest.fn(),
   mkdirSync: jest.fn(),
+  writeFileSync: jest.fn(),
+  unlinkSync: jest.fn(),
+  readdirSync: jest.fn(),
 }));
 import * as fs from 'fs';
 const mockedFs = fs as jest.Mocked<typeof fs>;

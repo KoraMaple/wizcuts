@@ -25,6 +25,10 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.4.2",
@@ -33,6 +37,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "babel-jest": "^30.0.4",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
     "jest": "^29.7.0",
@@ -75,7 +80,7 @@
     ],
     "transform": {
       "^.+\\.(js|jsx|ts|tsx)$": [
-        "next/jest"
+        "babel-jest"
       ]
     },
     "transformIgnorePatterns": [
