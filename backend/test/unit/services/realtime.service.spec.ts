@@ -84,7 +84,9 @@ describe('RealtimeService', () => {
       mockChannel.send.mockRejectedValue(new Error('Broadcast failed'));
 
       // Should not throw, just log the error
-      await expect(service.broadcastEvent('bookings', event)).resolves.toBeUndefined();
+      await expect(
+        service.broadcastEvent('bookings', event),
+      ).resolves.toBeUndefined();
     });
   });
 

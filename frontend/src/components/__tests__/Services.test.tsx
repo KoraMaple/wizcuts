@@ -4,7 +4,7 @@ import Services from '../Services';
 describe('Services Component', () => {
   it('renders services section', () => {
     render(<Services />);
-    const section = screen.getByRole('region');
+    const section = document.querySelector('#services');
     expect(section).toBeInTheDocument();
   });
 

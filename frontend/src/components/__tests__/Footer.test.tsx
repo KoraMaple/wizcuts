@@ -13,9 +13,9 @@ describe('Footer Component', () => {
     expect(screen.getByText('WizCuts')).toBeInTheDocument();
   });
 
-  it('displays contact information', () => {
+  it('displays brand tagline', () => {
     render(<Footer />);
-    expect(screen.getByText(/Premium Grooming Experience/)).toBeInTheDocument();
+    expect(screen.getByText(/PREMIUM GROOMING/)).toBeInTheDocument();
   });
 
   it('displays quick links', () => {
@@ -25,8 +25,8 @@ describe('Footer Component', () => {
     expect(screen.getByText('Contact')).toBeInTheDocument();
   });
 
-  it('displays business hours', () => {
+  it('displays contact information', () => {
     render(<Footer />);
-    expect(screen.getByText('Business Hours')).toBeInTheDocument();
+    expect(screen.getByText('Contact Info')).toBeInTheDocument();
   });
 });

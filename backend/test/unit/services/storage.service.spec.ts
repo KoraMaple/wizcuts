@@ -182,8 +182,7 @@ describe('StorageService', () => {
         };
         const mockPublicUrlResult = {
           data: {
-            publicUrl:
-              `https://supabase.co/storage/v1/object/public/profiles/${timestamp}.jpg`,
+            publicUrl: `https://supabase.co/storage/v1/object/public/profiles/${timestamp}.jpg`,
           },
         };
 

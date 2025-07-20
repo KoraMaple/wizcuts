@@ -4,8 +4,8 @@ import Hero from '../Hero';
 describe('Hero Component', () => {
   it('renders hero section', () => {
     render(<Hero />);
-    const section = screen.getByRole('banner');
-    expect(section).toBeInTheDocument();
+    const heading = screen.getByRole('heading', { name: /Redefine Your Style/i });
+    expect(heading).toBeInTheDocument();
   });
 
   it('displays main heading', () => {

@@ -97,7 +97,7 @@ describe('BarberService', () => {
           useValue: mockRealtimeService,
         },
         {
-          provide: StorageService, 
+          provide: StorageService,
           useValue: mockStorageService,
         },
       ],
