@@ -2,6 +2,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { BookingService } from '../../../src/services/booking.service';
+import { RealtimeService } from '../../../src/services/realtime.service';
 import { db } from '../../../src/database/database';
 import { BookingStatus } from '../../../src/schema';
 import {
@@ -129,7 +130,17 @@ describe('BookingService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BookingService],
+      providers: [
+        BookingService,
+        {
+          provide: RealtimeService,
+          useValue: {
+            broadcastEvent: jest.fn(),
+            subscribeToBookings: jest.fn(),
+            subscribeToBarbers: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<BookingService>(BookingService);

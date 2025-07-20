@@ -81,13 +81,10 @@ describe('RealtimeService', () => {
         timestamp: new Date(),
       };
 
-      mockChannel.send.mockResolvedValue({
-        error: { message: 'Broadcast failed' },
-      });
+      mockChannel.send.mockRejectedValue(new Error('Broadcast failed'));
 
-      await expect(service.broadcastEvent('bookings', event)).rejects.toThrow(
-        'Failed to broadcast event: Broadcast failed',
-      );
+      // Should not throw, just log the error
+      await expect(service.broadcastEvent('bookings', event)).resolves.toBeUndefined();
     });
   });
 
@@ -102,17 +99,7 @@ describe('RealtimeService', () => {
       expect(mockSupabaseClient.channel).toHaveBeenCalledWith('bookings');
       expect(mockChannel.on).toHaveBeenCalledWith(
         'broadcast',
-        { event: 'booking_created' },
-        expect.any(Function),
-      );
-      expect(mockChannel.on).toHaveBeenCalledWith(
-        'broadcast',
-        { event: 'booking_updated' },
-        expect.any(Function),
-      );
-      expect(mockChannel.on).toHaveBeenCalledWith(
-        'broadcast',
-        { event: 'booking_cancelled' },
+        { event: '*' },
         expect.any(Function),
       );
       expect(mockChannel.subscribe).toHaveBeenCalled();
@@ -124,7 +111,7 @@ describe('RealtimeService', () => {
       let eventHandler: any;
 
       mockChannel.on.mockImplementation((type, filter, handler) => {
-        if (filter.event === 'booking_created') {
+        if (filter.event === '*') {
           eventHandler = handler;
         }
         return mockChannel;
@@ -135,6 +122,7 @@ describe('RealtimeService', () => {
 
       // Simulate receiving an event
       const mockPayload = {
+        event: 'booking_created',
         payload: {
           booking: { id: 1, customerName: 'John Doe' },
           action: 'created',
@@ -166,7 +154,7 @@ describe('RealtimeService', () => {
       expect(mockSupabaseClient.channel).toHaveBeenCalledWith('barbers');
       expect(mockChannel.on).toHaveBeenCalledWith(
         'broadcast',
-        { event: 'barber_updated' },
+        { event: '*' },
         expect.any(Function),
       );
       expect(mockChannel.subscribe).toHaveBeenCalled();
