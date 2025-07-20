@@ -1,1 +1,11 @@
 .env
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Frontend specific
+frontend/test-results/
+frontend/playwright-report/
+frontend/playwright/.cache/
