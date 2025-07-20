@@ -26,12 +26,12 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@testing-library/react": "^15.0.7",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/user-event": "^14.5.2",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
     "jest": "^29.7.0",
@@ -41,7 +41,9 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
     "moduleNameMapping": {
       "^@/(.*)$": "<rootDir>/src/$1"
     },
@@ -71,7 +73,9 @@
       "**/?(*.)(test|spec).(js|jsx|ts|tsx)"
     ],
     "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": ["next/jest"]
+      "^.+\\.(js|jsx|ts|tsx)$": [
+        "next/jest"
+      ]
     },
     "transformIgnorePatterns": [
       "node_modules/(?!(.*\\.mjs$))"
