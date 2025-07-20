@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "koramaple",
+        "projectKey": "wizcuts-barber-shop"
+    }
+}

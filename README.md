@@ -1,107 +1,292 @@
-# WizCuts - Premium Barber Shop
+# WizCuts Barber Shop
 
-A stunning, modern full-stack web application built with Next.js 15.4.1 for an upscale barber shop. Features a luxurious design with smooth animations, responsive layout, and premium user experience.
+A luxury barber shop web application built with Next.js 15.4.1, NestJS, and modern web technologies. This application provides an elegant, sophisticated experience for upscale clients seeking premium grooming services.
 
-## 🎨 Design Features
+## 🚀 Features
 
-- **Luxury Color Palette**: Deep blues, charcoal, black with gold accents
-- **Premium Typography**: Playfair Display for headings, Inter for body text
-- **Smooth Animations**: Framer Motion powered micro-interactions
-- **Responsive Design**: Flawless experience on all devices
-- **Modern UI Components**: Built with Tailwind CSS and Lucide icons
+- **Modern Frontend**: Next.js 15.4.1 with TypeScript and Tailwind CSS
+- **Robust Backend**: NestJS with Drizzle ORM and PostgreSQL
+- **Real-time Updates**: Supabase integration for live booking updates
+- **Authentication**: Clerk integration for secure user management
+- **Responsive Design**: Mobile-first approach with elegant UI/UX
+- **Booking System**: Interactive appointment scheduling
+- **Service Management**: Dynamic service listings with pricing
+- **Team Profiles**: Professional barber showcases
+- **Gallery**: High-quality image showcase
+- **Quality Assurance**: Comprehensive testing with SonarQube integration
 
-## 🚀 Key Sections
+## 🏗️ Architecture
 
-- **Hero Section**: Striking visuals with engaging tagline and CTAs
-- **Services**: Comprehensive service offerings with pricing
-- **Gallery**: Interactive image gallery with filtering and modal view
-- **Booking System**: Complete appointment booking form
-- **Contact Information**: Location, hours, and contact details
-
-## 🛠️ Tech Stack
+### Frontend
 
 - **Framework**: Next.js 15.4.1 with App Router
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: Radix UI primitives
 - **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Image Optimization**: Next.js Image component
+- **State Management**: React hooks and context
 
-## 📦 Installation
+### Backend
+
+- **Framework**: NestJS
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: Clerk
+- **Real-time**: Supabase for live updates
+- **API Documentation**: Swagger/OpenAPI
+- **Validation**: Class-validator and class-transformer
+
+### Infrastructure
+
+- **Frontend Deployment**: Vercel
+- **Database**: PostgreSQL (production), Supabase (real-time features)
+- **Storage**: Supabase Storage with local fallback
+- **CI/CD**: GitHub Actions
+- **Quality Analysis**: SonarQube Cloud
+- **Security Scanning**: Trivy
+
+## 🛠️ Development Setup
+
+### Prerequisites
+
+- Node.js 20+
+- PostgreSQL 15+
+- npm or yarn
+
+### Environment Variables
+
+#### Frontend (.env.local)
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+#### Backend (.env)
+
+```env
+DATABASE_URL=postgresql://username:password@localhost:5432/wizcuts
+CLERK_SECRET_KEY=your_clerk_secret_key
+JWT_SECRET=your_jwt_secret
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/your-username/wizcuts.git
+   cd wizcuts
+   ```
+
+2. **Install frontend dependencies**
+
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+3. **Install backend dependencies**
+
+   ```bash
+   cd ../backend
+   npm install
+   ```
+
+4. **Setup database**
+
+   ```bash
+   # Create database
+   createdb wizcuts
+   
+   # Run migrations
+   npm run db:push
+   ```
+
+5. **Start development servers**
+
+   ```bash
+   # Terminal 1 - Backend
+   cd backend
+   npm run start:dev
+   
+   # Terminal 2 - Frontend
+   cd frontend
+   npm run dev
+   ```
+
+The application will be available at:
+
+- Frontend: <http://localhost:3000>
+- Backend API: <http://localhost:3001>
+- API Documentation: <http://localhost:3001/api>
+
+## 🧪 Testing
+
+### Frontend Testing
 
 ```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
+cd frontend
+npm test                # Run tests
+npm run test:coverage   # Run with coverage
+npm run test:watch      # Run in watch mode
 ```
 
-## 🎯 Features
+### Backend Testing
 
-- ✨ Modern, luxury design appealing to style-conscious clients
-- 📱 Fully responsive mobile-first design
-- 🎭 Smooth scroll navigation with sticky header
-- 🖼️ Interactive gallery with category filtering
-- 📅 Appointment booking system with form validation
-- ⚡ Optimized performance with Next.js 15.4.1
-- 🎨 Beautiful animations and micro-interactions
-- 🔍 SEO optimized with proper meta tags
-
-## 🎨 Component Structure
-
-```text
-src/
-├── app/
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-├── components/
-│   ├── Header.tsx      # Navigation with sticky behavior
-│   ├── Hero.tsx        # Main hero section with CTA
-│   ├── Services.tsx    # Service offerings display
-│   ├── Gallery.tsx     # Interactive image gallery
-│   ├── Booking.tsx     # Appointment booking form
-│   └── Footer.tsx      # Footer with contact info
-└── lib/
-    └── utils.ts        # Utility functions
+```bash
+cd backend
+npm test                # Run tests
+npm run test:coverage   # Run with coverage
+npm run test:e2e        # Run e2e tests
 ```
 
-## 🎨 Custom Styling
+### Coverage Targets
 
-The application uses a custom luxury color palette and typography system:
+- **Frontend**: 70% coverage threshold
+- **Backend**: 60% coverage threshold
+- **Current Status**: 40.89% overall coverage (targeting 80%)
 
-- **Display Font**: Playfair Display (serif)
-- **Body Font**: Inter (sans-serif)
-- **Primary Colors**: Slate tones (900-50)
-- **Accent Color**: Amber/Gold (400-600)
+## 📊 Code Quality
 
-## 🚀 Getting Started
+We use SonarQube Cloud for comprehensive code quality analysis:
 
-1. Open the project in VS Code
-2. Run `npm install` to install dependencies
-3. Run `npm run dev` to start the development server
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+- **Security**: Vulnerability detection and security hotspots
+- **Maintainability**: Code smells and technical debt
+- **Reliability**: Bug detection and reliability rating
+- **Coverage**: Test coverage tracking and reporting
 
-## 📝 Customization
+### Setup SonarQube
 
-- Update service offerings in `src/components/Services.tsx`
-- Modify gallery images in `src/components/Gallery.tsx`
-- Customize contact information in `src/components/Footer.tsx` and `src/components/Booking.tsx`
-- Adjust color palette in `src/app/globals.css`
+See [SonarQube Setup Guide](docs/SONARQUBE_SETUP.md) for detailed configuration instructions.
 
-## 🎯 Performance
+## 🚀 Deployment
 
-- Optimized images with Next.js Image component
-- Lazy loading for gallery images
-- Smooth animations with Framer Motion
-- Responsive design with mobile-first approach
-- SEO optimized with proper meta tags
+### Staging
 
-Built with ❤️ for premium grooming experiences.
+- **Branch**: `develop`
+- **URL**: <https://wizcuts-staging.vercel.app>
+- **Trigger**: Automatic on push to develop
+
+### Production
+
+- **Branch**: `main`
+- **URL**: <https://wizcuts.com>
+- **Trigger**: Automatic on push to main
+
+### CI/CD Pipeline
+
+The GitHub Actions workflow includes:
+
+1. Frontend tests and coverage
+2. Backend tests and coverage
+3. SonarQube quality analysis
+4. Security scanning with Trivy
+5. Automated deployment to Vercel
+
+## 📁 Project Structure
+
+```
+wizcuts/
+├── frontend/                 # Next.js frontend application
+│   ├── src/
+│   │   ├── app/             # App router pages
+│   │   ├── components/      # Reusable UI components
+│   │   ├── lib/            # Utility functions
+│   │   └── styles/         # Global styles
+│   ├── public/             # Static assets
+│   └── package.json
+├── backend/                 # NestJS backend application
+│   ├── src/
+│   │   ├── modules/        # Feature modules
+│   │   ├── common/         # Shared utilities
+│   │   └── main.ts         # Application entry point
+│   ├── test/               # Test files
+│   └── package.json
+├── docs/                   # Documentation
+├── .github/
+│   └── workflows/          # CI/CD workflows
+└── README.md
+```
+
+## 🎨 Design System
+
+### Color Palette
+
+- **Primary**: Deep blues (#1e40af)
+- **Secondary**: Charcoal (#374151)
+- **Accent**: Gold (#f59e0b)
+- **Background**: Black (#000000)
+- **Text**: White/Light gray
+
+### Typography
+
+- **Headings**: Large, well-kerned fonts
+- **Body**: Modern, readable sans-serif
+- **Emphasis**: Serif for luxury feel
+
+## 🔧 Development Guidelines
+
+### Code Standards
+
+- TypeScript for all code
+- ESLint + Prettier for formatting
+- Conventional commits
+- Comprehensive testing
+- Component-driven development
+
+### Git Workflow
+
+1. Create feature branch from `develop`
+2. Make changes with tests
+3. Run quality checks locally
+4. Create pull request
+5. Ensure CI/CD passes
+6. Merge after review
+
+## 📖 API Documentation
+
+The backend API is fully documented with Swagger/OpenAPI:
+
+- **Local**: <http://localhost:3001/api>
+- **Staging**: <https://api-staging.wizcuts.com/api>
+- **Production**: <https://api.wizcuts.com/api>
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Run quality checks
+7. Submit a pull request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Support
+
+For questions and support:
+
+- Create an issue on GitHub
+- Check the documentation in `docs/`
+- Review the SonarQube dashboard for code quality insights
+
+## 🔮 Roadmap
+
+- [ ] Enhanced booking flow with calendar integration
+- [ ] Email/SMS notification system
+- [ ] Loyalty program integration
+- [ ] Advanced analytics dashboard
+- [ ] Mobile app development
+- [ ] Payment integration
+- [ ] Review and rating system
+
+---
+
+Built with ❤️ for luxury grooming experiences
