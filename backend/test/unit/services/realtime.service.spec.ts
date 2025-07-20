@@ -9,8 +9,8 @@ import { SupabaseConfigService } from '../../../src/config/supabase.config';
 // Mock Supabase client
 const mockChannel = {
   send: jest.fn(),
-  on: jest.fn(),
-  subscribe: jest.fn(),
+  on: jest.fn().mockReturnThis(),
+  subscribe: jest.fn().mockReturnThis(),
   unsubscribe: jest.fn(),
 };
 
@@ -137,6 +137,7 @@ describe('RealtimeService', () => {
         payload: {
           booking: { id: 1, customerName: 'John Doe' },
           action: 'created',
+          timestamp: '2024-01-01T10:00:00.000Z',
         },
         timestamp: new Date('2024-01-01T10:00:00.000Z'),
       });

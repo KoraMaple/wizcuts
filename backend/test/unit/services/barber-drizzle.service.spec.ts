@@ -2,6 +2,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { BarberService } from '../../../src/services/barber-drizzle.service';
+import { RealtimeService } from '../../../src/services/realtime.service';
+import { StorageService } from '../../../src/services/storage.service';
 import { db } from '../../../src/database/database';
 import { CreateBarberDto, UpdateBarberDto } from '../../../src/dto/barber.dto';
 
@@ -39,6 +41,16 @@ jest.mock('drizzle-orm', () => ({
 }));
 
 const mockDb = db as jest.Mocked<typeof db>;
+
+// Mock services
+const mockRealtimeService = {
+  broadcastEvent: jest.fn().mockResolvedValue(undefined),
+};
+
+const mockStorageService = {
+  uploadFile: jest.fn().mockResolvedValue('uploads/test-file.jpg'),
+  deleteFile: jest.fn().mockResolvedValue(undefined),
+};
 
 describe('BarberService', () => {
   let service: BarberService;
@@ -78,7 +90,17 @@ describe('BarberService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BarberService],
+      providers: [
+        BarberService,
+        {
+          provide: RealtimeService,
+          useValue: mockRealtimeService,
+        },
+        {
+          provide: StorageService, 
+          useValue: mockStorageService,
+        },
+      ],
     }).compile();
 
     service = module.get<BarberService>(BarberService);
@@ -449,19 +471,18 @@ describe('BarberService', () => {
       const mockAvailableBarbers = [mockBarber];
       const mockSelectChain = {
         from: jest.fn().mockReturnThis(),
-        leftJoin: jest.fn().mockReturnThis(),
-        where: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockResolvedValue(mockAvailableBarbers),
+        innerJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockResolvedValue(mockAvailableBarbers),
       };
-      mockDb.select.mockReturnValue(mockSelectChain as any);
+      mockDb.selectDistinct.mockReturnValue(mockSelectChain as any);
 
       // Act
       const result = await service.findByAvailability(testDate);
 
       // Assert
-      expect(mockDb.select).toHaveBeenCalled();
+      expect(mockDb.selectDistinct).toHaveBeenCalled();
       expect(mockSelectChain.from).toHaveBeenCalledWith(barbers);
-      expect(mockSelectChain.leftJoin).toHaveBeenCalledWith(
+      expect(mockSelectChain.innerJoin).toHaveBeenCalledWith(
         availabilities,
         expect.anything(),
       );
@@ -483,11 +504,10 @@ describe('BarberService', () => {
 
       const mockSelectChain = {
         from: jest.fn().mockReturnThis(),
-        leftJoin: jest.fn().mockReturnThis(),
-        where: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockResolvedValue([]),
+        innerJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockResolvedValue([]),
       };
-      mockDb.select.mockReturnValue(mockSelectChain as any);
+      mockDb.selectDistinct.mockReturnValue(mockSelectChain as any);
 
       // Act & Assert
       for (const date of testDates) {
@@ -495,7 +515,7 @@ describe('BarberService', () => {
         expect(result).toEqual([]);
         expect(mockSelectChain.where).toHaveBeenCalled();
         jest.clearAllMocks();
-        mockDb.select.mockReturnValue(mockSelectChain as any);
+        mockDb.selectDistinct.mockReturnValue(mockSelectChain as any);
       }
     });
 
@@ -504,11 +524,10 @@ describe('BarberService', () => {
       const testDate = new Date('2024-01-16');
       const mockSelectChain = {
         from: jest.fn().mockReturnThis(),
-        leftJoin: jest.fn().mockReturnThis(),
-        where: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockResolvedValue([]),
+        innerJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockResolvedValue([]),
       };
-      mockDb.select.mockReturnValue(mockSelectChain as any);
+      mockDb.selectDistinct.mockReturnValue(mockSelectChain as any);
 
       // Act
       const result = await service.findByAvailability(testDate);
@@ -522,13 +541,12 @@ describe('BarberService', () => {
       const testDate = new Date('2024-01-15');
       const mockSelectChain = {
         from: jest.fn().mockReturnThis(),
-        leftJoin: jest.fn().mockReturnThis(),
-        where: jest.fn().mockReturnThis(),
-        orderBy: jest
+        innerJoin: jest.fn().mockReturnThis(),
+        where: jest
           .fn()
           .mockRejectedValue(new Error('Availability query failed')),
       };
-      mockDb.select.mockReturnValue(mockSelectChain as any);
+      mockDb.selectDistinct.mockReturnValue(mockSelectChain as any);
 
       // Act & Assert
       await expect(service.findByAvailability(testDate)).rejects.toThrow(
@@ -656,11 +674,10 @@ describe('BarberService', () => {
       const invalidDate = new Date('invalid-date');
       const mockSelectChain = {
         from: jest.fn().mockReturnThis(),
-        leftJoin: jest.fn().mockReturnThis(),
-        where: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockResolvedValue([]),
+        innerJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockResolvedValue([]),
       };
-      mockDb.select.mockReturnValue(mockSelectChain as any);
+      mockDb.selectDistinct.mockReturnValue(mockSelectChain as any);
 
       // Act
       const result = await service.findByAvailability(invalidDate);

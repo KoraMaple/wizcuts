@@ -9,7 +9,17 @@ import {
 import { SupabaseConfigService } from '../../../src/config/supabase.config';
 
 // Mock file system
-jest.mock('fs');
+jest.mock('fs', () => ({
+  promises: {
+    readdir: jest.fn(),
+    writeFile: jest.fn(),
+    unlink: jest.fn(),
+    mkdir: jest.fn(),
+    access: jest.fn(),
+  },
+  existsSync: jest.fn(),
+  mkdirSync: jest.fn(),
+}));
 import * as fs from 'fs';
 const mockedFs = fs as jest.Mocked<typeof fs>;
 
