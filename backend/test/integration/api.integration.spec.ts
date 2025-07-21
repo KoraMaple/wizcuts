@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import * as request from 'supertest';
 import { BarberService } from '../../src/services/barber-drizzle.service';
 import { BookingService } from '../../src/services/booking.service';
+import { RealtimeService } from '../../src/services/realtime.service';
+import { StorageService } from '../../src/services/storage.service';
 import { BarberController } from '../../src/controllers/barber.controller';
 import { BookingController } from '../../src/controllers/booking.controller';
 import { ClerkAuthGuard } from '../../src/guards/clerk-auth.guard';
@@ -107,6 +109,20 @@ describe('API Integration Tests', () => {
           provide: 'Reflector',
           useValue: {
             getAllAndOverride: jest.fn().mockReturnValue(true), // Mark all routes as public for testing
+          },
+        },
+        {
+          provide: RealtimeService,
+          useValue: {
+            broadcastEvent: jest.fn().mockResolvedValue(undefined),
+          },
+        },
+        {
+          provide: StorageService,
+          useValue: {
+            uploadFile: jest.fn().mockResolvedValue('test-url'),
+            deleteFile: jest.fn().mockResolvedValue(undefined),
+            listFiles: jest.fn().mockResolvedValue([]),
           },
         },
       ],
