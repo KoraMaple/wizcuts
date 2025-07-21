@@ -130,9 +130,12 @@ The application will be available at:
 
 ```bash
 cd frontend
-npm test                # Run tests
+npm test                # Run Jest unit tests
 npm run test:coverage   # Run with coverage
 npm run test:watch      # Run in watch mode
+npm run e2e             # Run Playwright E2E tests
+npm run e2e:ui          # Run E2E tests with UI
+npm run e2e:debug       # Debug E2E tests
 ```
 
 ### Backend Testing
@@ -142,6 +145,17 @@ cd backend
 npm test                # Run tests
 npm run test:coverage   # Run with coverage
 npm run test:e2e        # Run e2e tests
+```
+
+### End-to-End Testing
+
+The project uses Playwright for comprehensive E2E testing. See [E2E Testing Documentation](frontend/E2E_TESTING.md) for detailed setup and usage instructions.
+
+```bash
+cd frontend
+npm run e2e:install     # Install Playwright browsers
+npm run e2e             # Run all E2E tests
+npm run e2e:report      # View test results
 ```
 
 ### Coverage Targets
