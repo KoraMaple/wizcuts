@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X, Scissors, Phone, MapPin } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { UserButton, SignInButton, useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
 
 interface HeaderProps {
   readonly className?: string
@@ -12,6 +14,8 @@ interface HeaderProps {
 export default function Header({ className }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { isSignedIn, isLoaded } = useUser()
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,19 +97,55 @@ export default function Header({ className }: HeaderProps) {
                 <span>Downtown</span>
               </div>
             </div>
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-400/25 transition-all duration-300"
-              onClick={() => {
-                document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })
-              }}
-            >
-              Book Now
-            </motion.button>
+            
+            {/* Authentication Section */}
+            {isLoaded && (
+              <div className="flex items-center space-x-4">
+                {isSignedIn ? (
+                  <div className="flex items-center space-x-3">
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-400/25 transition-all duration-300"
+                      onClick={() => {
+                        document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })
+                      }}
+                    >
+                      Book Now
+                    </motion.button>
+                    <UserButton 
+                      appearance={{
+                        elements: {
+                          avatarBox: "w-10 h-10 rounded-full border-2 border-amber-400/50 hover:border-amber-400 transition-colors",
+                          userButtonPopoverCard: "bg-slate-800 border border-slate-600 shadow-2xl",
+                          userButtonPopoverActionButton: "text-slate-200 hover:bg-slate-700 hover:text-amber-400 transition-colors",
+                          userButtonPopoverActionButtonText: "text-slate-200",
+                          userButtonPopoverActionButtonIcon: "text-slate-400",
+                          userButtonPopoverFooter: "hidden", // Hide the footer
+                        }
+                      }}
+                      userProfileMode="navigation"
+                      userProfileUrl="/profile"
+                    />
+                  </div>
+                ) : (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-400/25 transition-all duration-300"
+                      onClick={() => router.push('/sign-in')}
+                    >
+                      Sign In
+                    </motion.button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -161,15 +201,44 @@ export default function Header({ className }: HeaderProps) {
                     <span>123 Style Street, Downtown</span>
                   </div>
                 </div>
-                <button
-                  className="w-full bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-3 rounded-full font-semibold"
-                  onClick={() => {
-                    setIsOpen(false)
-                    document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })
-                  }}
-                >
-                  Book Your Appointment
-                </button>
+                
+                {/* Mobile Authentication */}
+                {isLoaded && (
+                  <div className="space-y-3">
+                    {isSignedIn ? (
+                      <>
+                        <button
+                          className="w-full bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-3 rounded-full font-semibold"
+                          onClick={() => {
+                            setIsOpen(false)
+                            document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })
+                          }}
+                        >
+                          Book Your Appointment
+                        </button>
+                        <div className="flex items-center justify-center pt-2">
+                          <UserButton 
+                            appearance={{
+                              elements: {
+                                avatarBox: "w-10 h-10 rounded-full border-2 border-amber-400/50",
+                                userButtonPopoverCard: "bg-slate-800 border border-slate-600",
+                                userButtonPopoverActionButton: "text-slate-200 hover:bg-slate-700 hover:text-amber-400",
+                              }
+                            }}
+                            userProfileMode="navigation"
+                            userProfileUrl="/profile"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <SignInButton mode="modal">
+                        <button className="w-full bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-3 rounded-full font-semibold">
+                          Sign In to Book
+                        </button>
+                      </SignInButton>
+                    )}
+                  </div>
+                )}
               </motion.div>
             </div>
           </motion.div>

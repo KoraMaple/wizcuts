@@ -7,7 +7,8 @@ A luxury barber shop web application built with Next.js 15.4.1, NestJS, and mode
 - **Modern Frontend**: Next.js 15.4.1 with TypeScript and Tailwind CSS
 - **Robust Backend**: NestJS with Drizzle ORM and PostgreSQL
 - **Real-time Updates**: Supabase integration for live booking updates
-- **Authentication**: Clerk integration for secure user management
+- **Authentication**: Clerk integration for secure user management (✅ Implemented)
+- **Booking Flow**: Sign-in required only for appointment confirmation
 - **Responsive Design**: Mobile-first approach with elegant UI/UX
 - **Booking System**: Interactive appointment scheduling
 - **Service Management**: Dynamic service listings with pricing
