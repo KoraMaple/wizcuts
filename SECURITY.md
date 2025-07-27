@@ -47,7 +47,7 @@ secrets/
 ### Frontend (.env.local)
 **Status**: Protected locally, never committed
 - Clerk publishable key: `pk_test_0M08OQ47O3M2G3Md6snOrzUiATnoXWxVbNalsf7knU`
-- Clerk secret key: `sk_test_0M08OQ47O3M2G3Md6snOrzUiATnoXWxVbNalsf7knU`
+- Clerk secret key: `sk_test_YOUR_SECRET_KEY_HERE`
 - **Security**: Real development keys protected by .gitignore
 
 ### Backend
