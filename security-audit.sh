@@ -70,7 +70,7 @@ check_working_directory() {
         for file in $ENV_FILES; do
             if [ -f "$file" ]; then
                 # Check for real Clerk keys
-                REAL_KEYS=$(grep -E "(sk_|pk_)[a-zA-Z0-9]{32,}" "$file" 2>/dev/null | head -2 || true)
+                REAL_KEYS=$(grep -E "(sk_|pk_)(test_|live_)[a-zA-Z0-9]{64}" "$file" 2>/dev/null | head -2 || true)
                 if [ -n "$REAL_KEYS" ]; then
                     echo "⚠️  Real API keys detected in $file (protected by .gitignore)"
                 fi
