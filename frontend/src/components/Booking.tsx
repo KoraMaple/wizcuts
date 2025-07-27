@@ -1,40 +1,40 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Clock, Star, X, MapPin, Phone } from 'lucide-react'
-import Image from 'next/image'
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Clock, Star, X, MapPin, Phone } from 'lucide-react';
+import Image from 'next/image';
 
 const services = [
-  { 
-    id: 'signature-cut', 
-    name: 'Signature Cut', 
-    duration: 45, 
+  {
+    id: 'signature-cut',
+    name: 'Signature Cut',
+    duration: 45,
     price: 85,
-    description: 'Precision haircut tailored to your style'
+    description: 'Precision haircut tailored to your style',
   },
-  { 
-    id: 'traditional-shave', 
-    name: 'Traditional Shave', 
-    duration: 30, 
+  {
+    id: 'traditional-shave',
+    name: 'Traditional Shave',
+    duration: 30,
     price: 65,
-    description: 'Classic hot towel shave experience'
+    description: 'Classic hot towel shave experience',
   },
-  { 
-    id: 'color-styling', 
-    name: 'Color & Styling', 
-    duration: 90, 
+  {
+    id: 'color-styling',
+    name: 'Color & Styling',
+    duration: 90,
     price: 120,
-    description: 'Expert color and professional styling'
+    description: 'Expert color and professional styling',
   },
-  { 
-    id: 'vip-experience', 
-    name: 'VIP Experience', 
-    duration: 120, 
+  {
+    id: 'vip-experience',
+    name: 'VIP Experience',
+    duration: 120,
     price: 200,
-    description: 'Complete luxury grooming package'
-  }
-]
+    description: 'Complete luxury grooming package',
+  },
+];
 
 const barbers = [
   {
@@ -45,15 +45,16 @@ const barbers = [
     specialties: ['Classic Cuts', 'Beard Sculpting', 'Traditional Shaves'],
     rating: 4.9,
     reviews: 342,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+    image:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
     bio: 'Marcus founded WizCuts with a vision to bring timeless barbering traditions to the modern gentleman.',
     availability: {
       '2025-07-18': ['9:00', '10:30', '2:00', '3:30'],
       '2025-07-19': ['9:00', '11:00', '1:00', '4:00'],
       '2025-07-21': ['10:00', '11:30', '2:30', '4:00'],
       '2025-07-22': ['9:30', '1:00', '3:00', '5:00'],
-      '2025-07-23': ['9:00', '10:30', '2:00', '4:30']
-    }
+      '2025-07-23': ['9:00', '10:30', '2:00', '4:30'],
+    },
   },
   {
     id: 'alessandro-rivera',
@@ -63,15 +64,16 @@ const barbers = [
     specialties: ['Modern Cuts', 'Color Techniques', 'Styling'],
     rating: 4.8,
     reviews: 289,
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+    image:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
     bio: 'Alessandro brings European flair and cutting-edge techniques to every client experience.',
     availability: {
       '2025-07-18': ['9:30', '11:00', '1:30', '4:00'],
       '2025-07-19': ['10:00', '12:00', '2:30', '4:30'],
       '2025-07-21': ['9:00', '11:30', '1:00', '3:30'],
       '2025-07-22': ['10:30', '1:30', '3:30', '5:30'],
-      '2025-07-23': ['9:30', '11:00', '2:30', '4:00']
-    }
+      '2025-07-23': ['9:30', '11:00', '2:30', '4:00'],
+    },
   },
   {
     id: 'james-wright',
@@ -81,15 +83,16 @@ const barbers = [
     specialties: ['Fade Cuts', 'Line Work', 'Contemporary Styles'],
     rating: 4.7,
     reviews: 195,
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
+    image:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
     bio: 'James specializes in precision cuts and contemporary styling for the modern professional.',
     availability: {
       '2025-07-18': ['10:00', '12:30', '3:00', '5:00'],
       '2025-07-19': ['9:30', '11:30', '2:00', '4:00'],
       '2025-07-21': ['10:30', '12:00', '2:30', '5:00'],
       '2025-07-22': ['9:00', '11:00', '2:00', '4:30'],
-      '2025-07-23': ['10:00', '1:00', '3:30', '5:30']
-    }
+      '2025-07-23': ['10:00', '1:00', '3:30', '5:30'],
+    },
   },
   {
     id: 'david-chen',
@@ -99,54 +102,62 @@ const barbers = [
     specialties: ['Asian Hair Techniques', 'Texture Work', 'Creative Styling'],
     rating: 4.9,
     reviews: 267,
-    image: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face',
+    image:
+      'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face',
     bio: 'David combines traditional Asian techniques with modern innovation for unique, personalized looks.',
     availability: {
       '2025-07-18': ['9:00', '11:30', '2:30', '4:30'],
       '2025-07-19': ['10:30', '12:30', '3:00', '5:00'],
       '2025-07-21': ['9:30', '11:00', '1:30', '4:00'],
       '2025-07-22': ['10:00', '12:00', '2:30', '5:30'],
-      '2025-07-23': ['9:00', '11:30', '3:00', '4:30']
-    }
-  }
-]
+      '2025-07-23': ['9:00', '11:30', '3:00', '4:30'],
+    },
+  },
+];
 
 export default function Booking() {
-  const [selectedService, setSelectedService] = useState<string | null>(null)
-  const [selectedBarber, setSelectedBarber] = useState<string | null>(null)
-  const [showCalendar, setShowCalendar] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<string | null>(null)
-  const [selectedTime, setSelectedTime] = useState<string | null>(null)
-  const [currentStep, setCurrentStep] = useState<'service' | 'barber' | 'calendar'>('service')
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedBarber, setSelectedBarber] = useState<string | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [currentStep, setCurrentStep] = useState<
+    'service' | 'barber' | 'calendar'
+  >('service');
 
   const handleServiceSelect = (serviceId: string) => {
-    setSelectedService(serviceId)
-    setCurrentStep('barber')
-  }
+    setSelectedService(serviceId);
+    setCurrentStep('barber');
+  };
 
   const handleBarberSelect = (barberId: string) => {
-    setSelectedBarber(barberId)
-    setShowCalendar(true)
-    setCurrentStep('calendar')
-  }
+    setSelectedBarber(barberId);
+    setShowCalendar(true);
+    setCurrentStep('calendar');
+  };
 
   const handleBooking = () => {
-    const service = services.find(s => s.id === selectedService)
-    const barber = barbers.find(b => b.id === selectedBarber)
-    
-    alert(`Booking confirmed!\n\nService: ${service?.name}\nBarber: ${barber?.name}\nDate: ${selectedDate}\nTime: ${selectedTime}`)
-    
-    // Reset state
-    setSelectedService(null)
-    setSelectedBarber(null)
-    setShowCalendar(false)
-    setSelectedDate(null)
-    setSelectedTime(null)
-    setCurrentStep('service')
-  }
+    const service = services.find(s => s.id === selectedService);
+    const barber = barbers.find(b => b.id === selectedBarber);
 
-  const selectedBarberData = barbers.find(b => b.id === selectedBarber)
-  const availableSlots = selectedBarberData?.availability[selectedDate as keyof typeof selectedBarberData.availability] || []
+    alert(
+      `Booking confirmed!\n\nService: ${service?.name}\nBarber: ${barber?.name}\nDate: ${selectedDate}\nTime: ${selectedTime}`
+    );
+
+    // Reset state
+    setSelectedService(null);
+    setSelectedBarber(null);
+    setShowCalendar(false);
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setCurrentStep('service');
+  };
+
+  const selectedBarberData = barbers.find(b => b.id === selectedBarber);
+  const availableSlots =
+    selectedBarberData?.availability[
+      selectedDate as keyof typeof selectedBarberData.availability
+    ] || [];
 
   return (
     <section id="booking" className="py-20 bg-background-secondary/30">
@@ -162,7 +173,8 @@ export default function Booking() {
             Book Your Experience
           </h2>
           <p className="text-xl text-foreground-secondary leading-relaxed">
-            Choose your service, select your preferred barber, and pick the perfect time slot.
+            Choose your service, select your preferred barber, and pick the
+            perfect time slot.
           </p>
         </motion.div>
 
@@ -171,19 +183,26 @@ export default function Booking() {
           <div className="flex items-center space-x-4">
             {['service', 'barber', 'calendar'].map((step, index) => (
               <div key={step} className="flex items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors ${
-                  currentStep === step || (index < ['service', 'barber', 'calendar'].indexOf(currentStep))
-                    ? 'bg-amber-400 text-slate-900' 
-                    : 'bg-background-secondary border border-border text-foreground-muted'
-                }`}>
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors ${
+                    currentStep === step ||
+                    index <
+                      ['service', 'barber', 'calendar'].indexOf(currentStep)
+                      ? 'bg-amber-400 text-slate-900'
+                      : 'bg-background-secondary border border-border text-foreground-muted'
+                  }`}
+                >
                   {index + 1}
                 </div>
                 {index < 2 && (
-                  <div className={`w-12 h-0.5 mx-2 transition-colors ${
-                    index < ['service', 'barber', 'calendar'].indexOf(currentStep)
-                      ? 'bg-amber-400' 
-                      : 'bg-border'
-                  }`} />
+                  <div
+                    className={`w-12 h-0.5 mx-2 transition-colors ${
+                      index <
+                      ['service', 'barber', 'calendar'].indexOf(currentStep)
+                        ? 'bg-amber-400'
+                        : 'bg-border'
+                    }`}
+                  />
                 )}
               </div>
             ))}
@@ -201,7 +220,7 @@ export default function Booking() {
               Choose Your Service
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {services.map((service) => (
+              {services.map(service => (
                 <motion.button
                   key={service.id}
                   onClick={() => handleServiceSelect(service.id)}
@@ -214,10 +233,16 @@ export default function Booking() {
                   }`}
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <h4 className="text-xl font-semibold text-foreground">{service.name}</h4>
-                    <span className="text-2xl font-bold text-amber-400">${service.price}</span>
+                    <h4 className="text-xl font-semibold text-foreground">
+                      {service.name}
+                    </h4>
+                    <span className="text-2xl font-bold text-amber-400">
+                      ${service.price}
+                    </span>
                   </div>
-                  <p className="text-foreground-secondary mb-3">{service.description}</p>
+                  <p className="text-foreground-secondary mb-3">
+                    {service.description}
+                  </p>
                   <div className="flex items-center text-sm text-foreground-muted">
                     <Clock className="h-4 w-4 mr-1" />
                     {service.duration} minutes
@@ -247,7 +272,7 @@ export default function Booking() {
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {barbers.map((barber) => (
+              {barbers.map(barber => (
                 <motion.button
                   key={barber.id}
                   onClick={() => handleBarberSelect(barber.id)}
@@ -267,17 +292,28 @@ export default function Booking() {
                       className="object-cover"
                     />
                   </div>
-                  <h4 className="text-lg font-semibold text-foreground mb-1">{barber.name}</h4>
+                  <h4 className="text-lg font-semibold text-foreground mb-1">
+                    {barber.name}
+                  </h4>
                   <p className="text-sm text-amber-400 mb-2">{barber.title}</p>
-                  <p className="text-xs text-foreground-muted mb-3">{barber.experience}</p>
+                  <p className="text-xs text-foreground-muted mb-3">
+                    {barber.experience}
+                  </p>
                   <div className="flex items-center mb-3">
                     <Star className="h-4 w-4 text-amber-400 fill-current mr-1" />
-                    <span className="text-sm font-medium text-foreground">{barber.rating}</span>
-                    <span className="text-xs text-foreground-muted ml-1">({barber.reviews})</span>
+                    <span className="text-sm font-medium text-foreground">
+                      {barber.rating}
+                    </span>
+                    <span className="text-xs text-foreground-muted ml-1">
+                      ({barber.reviews})
+                    </span>
                   </div>
                   <div className="space-y-1">
-                    {barber.specialties.slice(0, 2).map((specialty) => (
-                      <span key={specialty} className="inline-block text-xs bg-background-secondary px-2 py-1 rounded text-foreground-muted">
+                    {barber.specialties.slice(0, 2).map(specialty => (
+                      <span
+                        key={specialty}
+                        className="inline-block text-xs bg-background-secondary px-2 py-1 rounded text-foreground-muted"
+                      >
                         {specialty}
                       </span>
                     ))}
@@ -303,7 +339,7 @@ export default function Booking() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 className="bg-background border border-border rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -311,7 +347,10 @@ export default function Booking() {
                       Book with {selectedBarberData.name}
                     </h3>
                     <p className="text-foreground-secondary">
-                      {services.find(s => s.id === selectedService)?.name} • {services.find(s => s.id === selectedService)?.duration} min • ${services.find(s => s.id === selectedService)?.price}
+                      {services.find(s => s.id === selectedService)?.name} •{' '}
+                      {services.find(s => s.id === selectedService)?.duration}{' '}
+                      min • $
+                      {services.find(s => s.id === selectedService)?.price}
                     </p>
                   </div>
                   <button
@@ -326,25 +365,29 @@ export default function Booking() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Available Dates */}
                   <div>
-                    <h4 className="text-lg font-semibold text-foreground mb-4">Available Dates</h4>
+                    <h4 className="text-lg font-semibold text-foreground mb-4">
+                      Available Dates
+                    </h4>
                     <div className="space-y-2">
-                      {Object.keys(selectedBarberData.availability).map((date) => (
-                        <button
-                          key={date}
-                          onClick={() => setSelectedDate(date)}
-                          className={`w-full text-left p-3 rounded-lg border transition-colors ${
-                            selectedDate === date
-                              ? 'border-amber-400 bg-amber-400/10 text-foreground'
-                              : 'border-border bg-background-secondary/50 text-foreground-secondary hover:border-amber-400/50'
-                          }`}
-                        >
-                          {new Date(date).toLocaleDateString('en-US', { 
-                            weekday: 'long', 
-                            month: 'long', 
-                            day: 'numeric' 
-                          })}
-                        </button>
-                      ))}
+                      {Object.keys(selectedBarberData.availability).map(
+                        date => (
+                          <button
+                            key={date}
+                            onClick={() => setSelectedDate(date)}
+                            className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                              selectedDate === date
+                                ? 'border-amber-400 bg-amber-400/10 text-foreground'
+                                : 'border-border bg-background-secondary/50 text-foreground-secondary hover:border-amber-400/50'
+                            }`}
+                          >
+                            {new Date(date).toLocaleDateString('en-US', {
+                              weekday: 'long',
+                              month: 'long',
+                              day: 'numeric',
+                            })}
+                          </button>
+                        )
+                      )}
                     </div>
                   </div>
 
@@ -355,7 +398,7 @@ export default function Booking() {
                     </h4>
                     {selectedDate && (
                       <div className="grid grid-cols-2 gap-2">
-                      {availableSlots.map((time: string) => (
+                        {availableSlots.map((time: string) => (
                           <button
                             key={time}
                             onClick={() => setSelectedTime(time)}
@@ -379,13 +422,21 @@ export default function Booking() {
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-8 p-4 bg-amber-400/10 border border-amber-400/20 rounded-lg"
                   >
-                    <h5 className="font-semibold text-foreground mb-2">Booking Summary</h5>
+                    <h5 className="font-semibold text-foreground mb-2">
+                      Booking Summary
+                    </h5>
                     <div className="text-sm text-foreground-secondary space-y-1">
-                      <p>Service: {services.find(s => s.id === selectedService)?.name}</p>
+                      <p>
+                        Service:{' '}
+                        {services.find(s => s.id === selectedService)?.name}
+                      </p>
                       <p>Barber: {selectedBarberData.name}</p>
                       <p>Date: {new Date(selectedDate).toLocaleDateString()}</p>
                       <p>Time: {selectedTime}</p>
-                      <p className="font-semibold text-foreground">Total: ${services.find(s => s.id === selectedService)?.price}</p>
+                      <p className="font-semibold text-foreground">
+                        Total: $
+                        {services.find(s => s.id === selectedService)?.price}
+                      </p>
                     </div>
                     <button
                       onClick={handleBooking}
@@ -410,27 +461,39 @@ export default function Booking() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-background-secondary/50 backdrop-blur-sm border border-border rounded-2xl p-8">
-              <h3 className="text-2xl font-display font-bold text-foreground mb-6">Quick Contact</h3>
+              <h3 className="text-2xl font-display font-bold text-foreground mb-6">
+                Quick Contact
+              </h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <Phone className="h-5 w-5 text-amber-400" />
                   <div>
-                    <p className="text-foreground font-medium">(555) 123-4567</p>
-                    <p className="text-foreground-muted text-sm">Available 9 AM - 8 PM, 7 days a week</p>
+                    <p className="text-foreground font-medium">
+                      (555) 123-4567
+                    </p>
+                    <p className="text-foreground-muted text-sm">
+                      Available 9 AM - 8 PM, 7 days a week
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
                   <MapPin className="h-5 w-5 text-amber-400" />
                   <div>
-                    <p className="text-foreground font-medium">123 Style Street</p>
-                    <p className="text-foreground-muted text-sm">Downtown District, City 12345</p>
+                    <p className="text-foreground font-medium">
+                      123 Style Street
+                    </p>
+                    <p className="text-foreground-muted text-sm">
+                      Downtown District, City 12345
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="bg-gradient-to-br from-amber-400/10 to-amber-600/10 border border-amber-400/20 rounded-2xl p-8">
-              <h3 className="text-xl font-semibold text-foreground mb-4">Booking Policy</h3>
+              <h3 className="text-xl font-semibold text-foreground mb-4">
+                Booking Policy
+              </h3>
               <div className="space-y-2 text-foreground-secondary text-sm">
                 <p>• 24-hour cancellation notice required</p>
                 <p>• Late arrivals may result in shortened service</p>
@@ -442,5 +505,5 @@ export default function Booking() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

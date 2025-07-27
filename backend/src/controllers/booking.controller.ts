@@ -85,7 +85,7 @@ export class BookingController {
   @ApiResponse({ status: 404, description: 'Booking not found.' })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateBookingDto: UpdateBookingDto,
+    @Body() updateBookingDto: UpdateBookingDto
   ) {
     return this.bookingService.update(id, updateBookingDto);
   }

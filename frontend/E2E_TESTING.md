@@ -1,6 +1,8 @@
 # End-to-End Testing with Playwright
 
-This project uses [Playwright](https://playwright.dev/) for comprehensive end-to-end (E2E) testing. Playwright provides reliable testing across all major browsers and includes powerful features for debugging and visual testing.
+This project uses [Playwright](https://playwright.dev/) for comprehensive end-to-end (E2E) testing.
+Playwright provides reliable testing across all major browsers and includes powerful features for
+debugging and visual testing.
 
 ## Table of Contents
 
@@ -16,13 +18,14 @@ This project uses [Playwright](https://playwright.dev/) for comprehensive end-to
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - The application running on `http://localhost:3000`
 
 ### Installation
 
-Playwright is already configured as a development dependency. To install the browsers needed for testing:
+Playwright is already configured as a development dependency. To install the browsers needed for
+testing:
 
 ```bash
 cd frontend
@@ -137,7 +140,7 @@ test('should create booking', async ({ page }) => {
   await bookingPage.navigateToBooking();
   await bookingPage.fillBookingForm('John Doe', 'john@example.com');
   await bookingPage.submitBooking();
-  
+
   await expect(page.locator('.booking-confirmation')).toBeVisible();
 });
 ```
@@ -156,7 +159,7 @@ testData.forEach(({ name, email }) => {
     await page.fill('[name="customerName"]', name);
     await page.fill('[name="email"]', email);
     await page.click('button[type="submit"]');
-    
+
     await expect(page.locator('.success-message')).toBeVisible();
   });
 });
@@ -184,8 +187,9 @@ npm run e2e:ui
 ### Screenshots and Videos
 
 Tests are configured to automatically capture:
+
 - Screenshots on failure
-- Videos on failure  
+- Videos on failure
 - Traces on first retry
 
 Access these in the `test-results/` directory after test runs.
@@ -197,10 +201,10 @@ test('debug example', async ({ page }) => {
   // Add console logs
   console.log('Navigating to page...');
   await page.goto('/');
-  
+
   // Pause execution for debugging
   await page.pause();
-  
+
   // Log page content
   const content = await page.textContent('body');
   console.log('Page content:', content);
@@ -260,8 +264,10 @@ test('should create booking', async ({ page }) => {
 });
 
 // Avoid: Tests depending on each other
-test('should login first', async ({ page }) => { /* ... */ });
-test('should create booking after login', async ({ page }) => { 
+test('should login first', async ({ page }) => {
+  /* ... */
+});
+test('should create booking after login', async ({ page }) => {
   // Don't assume previous test ran
 });
 ```
@@ -270,7 +276,9 @@ test('should create booking after login', async ({ page }) => {
 
 ```typescript
 // Good: Descriptive test names
-test('should display error message when booking form submitted with empty required fields', async ({ page }) => {
+test('should display error message when booking form submitted with empty required fields', async ({
+  page,
+}) => {
   // ...
 });
 
@@ -284,9 +292,15 @@ test('test booking', async ({ page }) => {
 
 ```typescript
 test.describe('Booking Form Validation', () => {
-  test('should require customer name', async ({ page }) => { /* ... */ });
-  test('should require valid email', async ({ page }) => { /* ... */ });
-  test('should require service selection', async ({ page }) => { /* ... */ });
+  test('should require customer name', async ({ page }) => {
+    /* ... */
+  });
+  test('should require valid email', async ({ page }) => {
+    /* ... */
+  });
+  test('should require service selection', async ({ page }) => {
+    /* ... */
+  });
 });
 ```
 
@@ -306,32 +320,32 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: Install dependencies
         run: |
           cd frontend
           npm ci
-          
+
       - name: Install Playwright browsers
         run: |
           cd frontend
           npx playwright install --with-deps
-          
+
       - name: Build application
         run: |
           cd frontend
           npm run build
-          
+
       - name: Start application
         run: |
           cd frontend
           npm start &
-          
+
       - name: Run E2E tests
         run: |
           cd frontend
           npm run e2e
-          
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
@@ -360,12 +374,14 @@ CMD ["npm", "run", "e2e"]
 ### Common Issues
 
 1. **Browser Installation Failures**
+
    ```bash
    # Try installing browsers with dependencies
    npx playwright install --with-deps
    ```
 
 2. **Port Already in Use**
+
    ```bash
    # Change port in playwright.config.ts or stop existing processes
    lsof -ti:3000 | xargs kill -9
@@ -398,4 +414,5 @@ When adding new E2E tests:
 4. Update this documentation if needed
 5. Test on multiple browsers before submitting
 
-For questions about E2E testing in this project, please create an issue or reach out to the development team.
+For questions about E2E testing in this project, please create an issue or reach out to the
+development team.

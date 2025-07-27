@@ -140,7 +140,7 @@ Enable debug mode in GitHub Actions:
 
 ```yaml
 env:
-  SONAR_SCANNER_OPTS: "-Dsonar.verbose=true"
+  SONAR_SCANNER_OPTS: '-Dsonar.verbose=true'
   ACTIONS_STEP_DEBUG: true
 ```
 
@@ -197,4 +197,5 @@ curl -H "Authorization: token $SONAR_TOKEN" \
 4. **Quality Focus**: Address code smells promptly
 5. **Security First**: Fix security issues immediately
 
-Remember: Quality gates are there to help maintain code quality. Don't bypass them without good reason!
+Remember: Quality gates are there to help maintain code quality. Don't bypass them without good
+reason!

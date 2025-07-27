@@ -85,7 +85,7 @@ describe('RealtimeService', () => {
 
       // Should not throw, just log the error
       await expect(
-        service.broadcastEvent('bookings', event),
+        service.broadcastEvent('bookings', event)
       ).resolves.toBeUndefined();
     });
   });
@@ -102,7 +102,7 @@ describe('RealtimeService', () => {
       expect(mockChannel.on).toHaveBeenCalledWith(
         'broadcast',
         { event: '*' },
-        expect.any(Function),
+        expect.any(Function)
       );
       expect(mockChannel.subscribe).toHaveBeenCalled();
       expect(typeof unsubscribe).toBe('function');
@@ -158,7 +158,7 @@ describe('RealtimeService', () => {
       expect(mockChannel.on).toHaveBeenCalledWith(
         'broadcast',
         { event: '*' },
-        expect.any(Function),
+        expect.any(Function)
       );
       expect(mockChannel.subscribe).toHaveBeenCalled();
       expect(typeof unsubscribe).toBe('function');
@@ -181,7 +181,7 @@ describe('RealtimeService', () => {
           schema: 'public',
           table: 'bookings',
         },
-        callback,
+        callback
       );
       expect(mockChannel.subscribe).toHaveBeenCalled();
       expect(typeof unsubscribe).toBe('function');

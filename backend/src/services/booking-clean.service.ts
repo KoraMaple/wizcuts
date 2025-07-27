@@ -29,7 +29,7 @@ export type AuthUser = {
 export class BookingService {
   async create(
     createBookingDto: CreateBookingDto,
-    user?: AuthUser,
+    user?: AuthUser
   ): Promise<Booking> {
     // Check if barber exists
     const [barber] = await db
@@ -38,7 +38,7 @@ export class BookingService {
       .where(eq(barbers.id, createBookingDto.barberId));
     if (!barber) {
       throw new NotFoundException(
-        `Barber with ID ${createBookingDto.barberId} not found`,
+        `Barber with ID ${createBookingDto.barberId} not found`
       );
     }
 
@@ -55,9 +55,9 @@ export class BookingService {
           eq(bookings.appointmentDateTime, appointmentDate),
           or(
             eq(bookings.status, BookingStatus.CONFIRMED),
-            eq(bookings.status, BookingStatus.PENDING),
-          ),
-        ),
+            eq(bookings.status, BookingStatus.PENDING)
+          )
+        )
       );
 
     if (conflictingBookings.length > 0) {
@@ -89,13 +89,13 @@ export class BookingService {
 
     if (queryDto.startDate) {
       conditions.push(
-        gte(bookings.appointmentDateTime, new Date(queryDto.startDate)),
+        gte(bookings.appointmentDateTime, new Date(queryDto.startDate))
       );
     }
 
     if (queryDto.endDate) {
       conditions.push(
-        lte(bookings.appointmentDateTime, new Date(queryDto.endDate)),
+        lte(bookings.appointmentDateTime, new Date(queryDto.endDate))
       );
     }
 
@@ -131,7 +131,7 @@ export class BookingService {
 
   async update(
     id: number,
-    updateBookingDto: UpdateBookingDto,
+    updateBookingDto: UpdateBookingDto
   ): Promise<Booking> {
     await this.findOne(id); // Check if exists
 

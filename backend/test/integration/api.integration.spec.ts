@@ -520,7 +520,7 @@ describe('API Integration Tests', () => {
       const responses = await Promise.all(requests);
 
       // Assert
-      responses.forEach((response) => {
+      responses.forEach(response => {
         expect(response.status).toBe(200);
         expect(response.body).toEqual([mockBarber]);
       });

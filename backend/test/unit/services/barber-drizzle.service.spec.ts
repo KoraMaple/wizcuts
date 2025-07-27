@@ -145,7 +145,7 @@ describe('BarberService', () => {
 
       // Act & Assert
       await expect(service.create(mockCreateBarberDto)).rejects.toThrow(
-        'Database error',
+        'Database error'
       );
     });
 
@@ -164,7 +164,7 @@ describe('BarberService', () => {
       expect(mockInsertChain.values).toHaveBeenCalledWith(
         expect.objectContaining({
           rating: '0.00',
-        }),
+        })
       );
     });
   });
@@ -254,7 +254,7 @@ describe('BarberService', () => {
       // Act & Assert
       await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
       await expect(service.findOne(999)).rejects.toThrow(
-        'Barber with ID 999 not found',
+        'Barber with ID 999 not found'
       );
     });
 
@@ -282,7 +282,7 @@ describe('BarberService', () => {
 
       // Act & Assert
       await expect(service.findOne(1)).rejects.toThrow(
-        'Database connection lost',
+        'Database connection lost'
       );
     });
   });
@@ -350,7 +350,7 @@ describe('BarberService', () => {
 
       // Act & Assert
       await expect(service.update(999, mockUpdateBarberDto)).rejects.toThrow(
-        NotFoundException,
+        NotFoundException
       );
     });
 
@@ -409,7 +409,7 @@ describe('BarberService', () => {
 
       // Act & Assert
       await expect(service.update(1, mockUpdateBarberDto)).rejects.toThrow(
-        'Update failed',
+        'Update failed'
       );
     });
   });
@@ -484,7 +484,7 @@ describe('BarberService', () => {
       expect(mockSelectChain.from).toHaveBeenCalledWith(barbers);
       expect(mockSelectChain.innerJoin).toHaveBeenCalledWith(
         availabilities,
-        expect.anything(),
+        expect.anything()
       );
       expect(mockSelectChain.where).toHaveBeenCalled();
       expect(result).toEqual(mockAvailableBarbers);
@@ -550,7 +550,7 @@ describe('BarberService', () => {
 
       // Act & Assert
       await expect(service.findByAvailability(testDate)).rejects.toThrow(
-        'Availability query failed',
+        'Availability query failed'
       );
     });
   });
@@ -651,7 +651,7 @@ describe('BarberService', () => {
 
       // Act & Assert
       await expect(
-        service.findBusyBarbers(testDate, startTime),
+        service.findBusyBarbers(testDate, startTime)
       ).rejects.toThrow('Busy barbers query failed');
     });
   });
@@ -729,7 +729,7 @@ describe('BarberService', () => {
 
       // Assert
       expect(results).toHaveLength(3);
-      results.forEach((result) => {
+      results.forEach(result => {
         expect(result).toEqual(mockBarber);
       });
     });

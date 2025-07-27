@@ -20,7 +20,7 @@ export abstract class StorageService {
   abstract uploadFile(
     bucket: string,
     file: StorageFile,
-    fileName?: string,
+    fileName?: string
   ): Promise<UploadResult>;
 
   abstract deleteFile(bucket: string, filePath: string): Promise<void>;
@@ -41,7 +41,7 @@ export class SupabaseStorageService extends StorageService {
   async uploadFile(
     bucket: string,
     file: StorageFile,
-    fileName?: string,
+    fileName?: string
   ): Promise<UploadResult> {
     const client = this.supabaseConfig.getClient();
     const timestamp = Date.now();
@@ -104,7 +104,7 @@ export class SupabaseStorageService extends StorageService {
       throw new Error(`List files failed: ${error.message}`);
     }
 
-    return data?.map((file) => file.name) ?? [];
+    return data?.map(file => file.name) ?? [];
   }
 }
 
@@ -127,7 +127,7 @@ export class LocalStorageService extends StorageService {
   async uploadFile(
     bucket: string,
     file: StorageFile,
-    fileName?: string,
+    fileName?: string
   ): Promise<UploadResult> {
     const timestamp = Date.now();
     const extension = path.extname(file.originalname);
@@ -176,7 +176,7 @@ export class LocalStorageService extends StorageService {
     const files = await fs.promises.readdir(bucketDir);
 
     if (prefix) {
-      return files.filter((file) => file.startsWith(prefix));
+      return files.filter(file => file.startsWith(prefix));
     }
 
     return files;

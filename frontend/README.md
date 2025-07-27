@@ -1,6 +1,7 @@
 # WizCuts - Premium Barber Shop
 
-A stunning, modern full-stack web application built with Next.js 15.4.1 for an upscale barber shop. Features a luxurious design with smooth animations, responsive layout, and premium user experience.
+A stunning, modern full-stack web application built with Next.js 15.4.1 for an upscale barber shop.
+Features a luxurious design with smooth animations, responsive layout, and premium user experience.
 
 ## 🎨 Design Features
 

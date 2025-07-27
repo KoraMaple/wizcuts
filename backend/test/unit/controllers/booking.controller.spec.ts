@@ -71,7 +71,7 @@ describe('BookingController', () => {
 
     controller = module.get<BookingController>(BookingController);
     service = module.get<BookingService>(
-      BookingService,
+      BookingService
     ) as jest.Mocked<BookingService>;
 
     jest.clearAllMocks();
@@ -98,16 +98,16 @@ describe('BookingController', () => {
     it('should handle double booking conflicts', async () => {
       // Arrange
       const conflictError = new ConflictException(
-        'Barber is not available at this time',
+        'Barber is not available at this time'
       );
       mockBookingService.create.mockRejectedValue(conflictError);
 
       // Act & Assert
       await expect(controller.create(mockCreateBookingDto)).rejects.toThrow(
-        ConflictException,
+        ConflictException
       );
       await expect(controller.create(mockCreateBookingDto)).rejects.toThrow(
-        'Barber is not available at this time',
+        'Barber is not available at this time'
       );
       expect(service.create).toHaveBeenCalledWith(mockCreateBookingDto);
     });
@@ -123,7 +123,7 @@ describe('BookingController', () => {
 
       // Act & Assert
       await expect(controller.create(pastDateDto)).rejects.toThrow(
-        'Cannot book appointments in the past',
+        'Cannot book appointments in the past'
       );
       expect(service.create).toHaveBeenCalledWith(pastDateDto);
     });
@@ -139,7 +139,7 @@ describe('BookingController', () => {
 
       // Act & Assert
       await expect(controller.create(invalidBarberDto)).rejects.toThrow(
-        NotFoundException,
+        NotFoundException
       );
       expect(service.create).toHaveBeenCalledWith(invalidBarberDto);
     });
@@ -151,7 +151,7 @@ describe('BookingController', () => {
 
       // Act & Assert
       await expect(controller.create(mockCreateBookingDto)).rejects.toThrow(
-        'Database connection failed',
+        'Database connection failed'
       );
       expect(service.create).toHaveBeenCalledWith(mockCreateBookingDto);
     });
@@ -231,7 +231,7 @@ describe('BookingController', () => {
 
       // Act & Assert
       await expect(controller.findAll({})).rejects.toThrow(
-        'Database query failed',
+        'Database query failed'
       );
       expect(service.findAll).toHaveBeenCalled();
     });
@@ -271,14 +271,14 @@ describe('BookingController', () => {
     it('should handle NotFoundException', async () => {
       // Arrange
       const notFoundError = new NotFoundException(
-        'Booking with ID 999 not found',
+        'Booking with ID 999 not found'
       );
       mockBookingService.findOne.mockRejectedValue(notFoundError);
 
       // Act & Assert
       await expect(controller.findOne(999)).rejects.toThrow(NotFoundException);
       await expect(controller.findOne(999)).rejects.toThrow(
-        'Booking with ID 999 not found',
+        'Booking with ID 999 not found'
       );
       expect(service.findOne).toHaveBeenCalledWith(999);
     });
@@ -296,7 +296,7 @@ describe('BookingController', () => {
     it('should handle zero ID', async () => {
       // Arrange
       mockBookingService.findOne.mockRejectedValue(
-        new NotFoundException('Booking with ID 0 not found'),
+        new NotFoundException('Booking with ID 0 not found')
       );
 
       // Act & Assert
@@ -353,13 +353,13 @@ describe('BookingController', () => {
     it('should handle NotFoundException during update', async () => {
       // Arrange
       const notFoundError = new NotFoundException(
-        'Booking with ID 999 not found',
+        'Booking with ID 999 not found'
       );
       mockBookingService.update.mockRejectedValue(notFoundError);
 
       // Act & Assert
       await expect(
-        controller.update(999, mockUpdateBookingDto),
+        controller.update(999, mockUpdateBookingDto)
       ).rejects.toThrow(NotFoundException);
       expect(service.update).toHaveBeenCalledWith(999, mockUpdateBookingDto);
     });
@@ -405,7 +405,7 @@ describe('BookingController', () => {
 
       // Act & Assert
       await expect(controller.update(1, invalidStatusUpdate)).rejects.toThrow(
-        'Invalid status transition',
+        'Invalid status transition'
       );
       expect(service.update).toHaveBeenCalledWith(1, invalidStatusUpdate);
     });
@@ -428,7 +428,7 @@ describe('BookingController', () => {
     it('should handle NotFoundException during removal', async () => {
       // Arrange
       const notFoundError = new NotFoundException(
-        'Booking with ID 999 not found',
+        'Booking with ID 999 not found'
       );
       mockBookingService.remove.mockRejectedValue(notFoundError);
 
@@ -450,13 +450,13 @@ describe('BookingController', () => {
     it('should handle removal of confirmed bookings', async () => {
       // Arrange
       const businessRuleError = new Error(
-        'Cannot delete confirmed booking within 24 hours',
+        'Cannot delete confirmed booking within 24 hours'
       );
       mockBookingService.remove.mockRejectedValue(businessRuleError);
 
       // Act & Assert
       await expect(controller.remove(1)).rejects.toThrow(
-        'Cannot delete confirmed booking within 24 hours',
+        'Cannot delete confirmed booking within 24 hours'
       );
       expect(service.remove).toHaveBeenCalledWith(1);
     });
@@ -466,7 +466,7 @@ describe('BookingController', () => {
     it('should handle concurrent booking requests', async () => {
       // Arrange
       const conflictError = new ConflictException(
-        'Time slot no longer available',
+        'Time slot no longer available'
       );
       mockBookingService.create
         .mockResolvedValueOnce(mockBooking)

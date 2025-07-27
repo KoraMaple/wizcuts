@@ -65,10 +65,10 @@ describe('ClerkAuthGuard', () => {
 
       // Act & Assert
       await expect(guard.canActivate(context)).rejects.toThrow(
-        UnauthorizedException,
+        UnauthorizedException
       );
       await expect(guard.canActivate(context)).rejects.toThrow(
-        'Authentication failed',
+        'Authentication failed'
       );
     });
 
