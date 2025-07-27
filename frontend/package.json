@@ -54,47 +54,5 @@
     "jest-environment-jsdom": "^29.7.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
-    ],
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    },
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts",
-      "!src/**/*.stories.{js,jsx,ts,tsx}"
-    ],
-    "coverageDirectory": "coverage",
-    "coverageReporters": [
-      "text",
-      "text-lcov",
-      "html",
-      "json",
-      "lcov"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 70,
-        "functions": 70,
-        "lines": 70,
-        "statements": 70
-      }
-    },
-    "testMatch": [
-      "**/__tests__/**/*.(js|jsx|ts|tsx)",
-      "**/?(*.)(test|spec).(js|jsx|ts|tsx)"
-    ],
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": [
-        "babel-jest"
-      ]
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(.*\\.mjs$))"
-    ]
   }
 }
