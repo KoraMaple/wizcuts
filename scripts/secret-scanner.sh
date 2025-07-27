@@ -11,7 +11,7 @@ if [ "$1" = "--staged" ]; then
     scan_mode="staged"
 else
     # For manual scan, check git-tracked files only (excluding node_modules completely)
-    files=$(git ls-files | grep -E '\.(ts|js|tsx|jsx|json|yml|yaml)$' | grep -v -E "(node_modules|\.next|dist|build|coverage)" || echo "")
+    files=$(git ls-files | grep -E '\.(ts|js|tsx|jsx|json|yml|yaml|md)$' | grep -v -E "(node_modules|\.next|dist|build|coverage)" || echo "")
     echo "📝 Scanning git-tracked files..."
     scan_mode="manual"
 fi
