@@ -52,3 +52,5 @@ build/
 **/.next/
 coverage/
 **/coverage/
+*.log
+*.tsbuildinfo
