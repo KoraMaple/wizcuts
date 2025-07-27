@@ -22,11 +22,15 @@ jobs:
 
       - name: Install root dependencies
         run: npm ci
+        env:
+          HUSKY: 0
 
       - name: Install frontend dependencies
         run: |
           cd frontend
           npm ci
+        env:
+          HUSKY: 0
 
       - name: Install Playwright Browsers
         run: |
