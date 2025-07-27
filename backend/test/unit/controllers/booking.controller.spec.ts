@@ -36,7 +36,7 @@ describe('BookingController', () => {
     customerEmail: 'john@example.com',
     customerPhone: '+1234567890',
     serviceName: 'Premium Haircut',
-    totalPrice: 50,
+    totalPrice: '50',
     durationMinutes: 45,
     appointmentDateTime: '2024-01-15T10:00:00Z',
     notes: 'Special instructions',
@@ -161,7 +161,7 @@ describe('BookingController', () => {
       const premiumServiceDto = {
         ...mockCreateBookingDto,
         serviceName: 'Premium Cut & Style',
-        totalPrice: 75,
+        totalPrice: '75',
         durationMinutes: 90,
       };
       const premiumBooking = { ...mockBooking, ...premiumServiceDto };
@@ -172,7 +172,7 @@ describe('BookingController', () => {
 
       // Assert
       expect(service.create).toHaveBeenCalledWith(premiumServiceDto);
-      expect(result.totalPrice).toBe(75);
+      expect(result.totalPrice).toBe('75');
       expect(result.durationMinutes).toBe(90);
     });
 
@@ -180,7 +180,7 @@ describe('BookingController', () => {
       // Arrange
       const freeServiceDto = {
         ...mockCreateBookingDto,
-        totalPrice: 0,
+        totalPrice: '0',
       };
       const freeBooking = { ...mockBooking, totalPrice: '0.00' };
       mockBookingService.create.mockResolvedValue(freeBooking);
@@ -518,7 +518,7 @@ describe('BookingController', () => {
       // Arrange
       const expensiveServiceDto = {
         ...mockCreateBookingDto,
-        totalPrice: 999.99,
+        totalPrice: '999.99',
         serviceName: 'VIP Executive Package',
       };
       const expensiveBooking = { ...mockBooking, totalPrice: '999.99' };
@@ -569,7 +569,7 @@ describe('BookingController', () => {
         customerEmail: 'jose.maria+barbershop@complex-domain.co.uk',
         customerPhone: '+34 91 123 45 67',
         serviceName: 'Premium Grooming & Styling Experience',
-        totalPrice: 125.5,
+        totalPrice: '125.5',
         appointmentDateTime: '2024-12-25T09:30:00Z',
         durationMinutes: 120,
         notes:
@@ -593,7 +593,7 @@ describe('BookingController', () => {
         customerEmail: 'ming@中文.com',
         customerPhone: '+86 138 0013 8000',
         serviceName: 'Traditional Chinese Grooming 中式理发',
-        totalPrice: 88.88,
+        totalPrice: '88.88',
         appointmentDateTime: '2024-02-15T10:00:00Z',
         durationMinutes: 60,
         notes: '需要传统理发服务',
@@ -643,7 +643,7 @@ describe('BookingController', () => {
         customerEmail: `${'a'.repeat(50)}@${'b'.repeat(50)}.com`,
         customerPhone: '+1234567890123456789',
         serviceName: 'S'.repeat(200),
-        totalPrice: 999.99,
+        totalPrice: '999.99',
         appointmentDateTime: '2024-02-15T10:00:00Z',
         durationMinutes: 480,
         notes: 'N'.repeat(1000),
@@ -666,7 +666,7 @@ describe('BookingController', () => {
         customerEmail: 'john@example.com',
         customerPhone: '+1234567890',
         serviceName: 'Haircut',
-        totalPrice: 25,
+        totalPrice: '25',
         appointmentDateTime: '2024-02-15T10:00:00Z',
         durationMinutes: 60,
         // notes is optional
