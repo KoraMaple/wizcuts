@@ -1,5 +1,29 @@
 .env
 
+# ===================================
+# SECURITY: Additional Protection Patterns
+# ===================================
+# Certificate and key files
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+
+# Secret directories
+secrets/
+.secrets/
+
+# Backup files that might contain sensitive data
+*.bk
+*.backup
+*_backup
+*.orig
+
+# ===================================
+# TESTING & AUTOMATION
+# ===================================
 # Playwright
 test-results/
 playwright-report/
