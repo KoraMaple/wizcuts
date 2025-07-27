@@ -15,6 +15,9 @@
 secrets/
 .secrets/
 
+# Documentation that might contain sensitive examples
+SECURITY.md
+
 # Backup files that might contain sensitive data
 *.bk
 *.backup
