@@ -37,7 +37,7 @@ check_git_history() {
     echo "🕰️  Checking git history for potential secrets..."
     
     # Check for Clerk keys in git history
-    CLERK_SECRETS=$(git log --all --grep="sk_" --grep="pk_" --oneline || true)
+    CLERK_SECRETS=$(git log --all --grep="sk_test_" --grep="sk_live_" --grep="pk_test_" --grep="pk_live_" --oneline || true)
     if [ -n "$CLERK_SECRETS" ]; then
         echo "⚠️  Potential Clerk keys found in commit messages:"
         echo "$CLERK_SECRETS"
