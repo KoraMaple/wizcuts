@@ -75,7 +75,7 @@
 **Services need to be registered in NestJS modules:**
 
 - RealtimeService
-- StorageService  
+- StorageService
 - SupabaseConfigService
 
 **Module updates required:**
@@ -87,7 +87,7 @@ providers: [
   RealtimeService,
   StorageService,
   // ... existing services
-]
+];
 ```
 
 ### 3. **Environment Configuration** (Priority: Medium)
@@ -218,4 +218,5 @@ npm run test:coverage
 npm run start:dev
 ```
 
-The foundation is solid and the architecture decisions have been excellent. The modular approach will make the final integration straightforward once the test issues are resolved.
+The foundation is solid and the architecture decisions have been excellent. The modular approach
+will make the final integration straightforward once the test issues are resolved.

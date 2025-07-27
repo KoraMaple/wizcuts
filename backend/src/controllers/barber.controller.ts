@@ -71,7 +71,7 @@ export class BarberController {
   @ApiResponse({ status: 200, description: 'Barber updated successfully' })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateBarberDto: UpdateBarberDto,
+    @Body() updateBarberDto: UpdateBarberDto
   ) {
     return await this.barberService.update(id, updateBarberDto);
   }

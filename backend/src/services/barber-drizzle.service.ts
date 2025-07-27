@@ -23,7 +23,7 @@ interface MulterFile {
 export class BarberService {
   constructor(
     private readonly realtimeService: RealtimeService,
-    private readonly storageService: StorageService,
+    private readonly storageService: StorageService
   ) {}
 
   async create(createBarberDto: CreateBarberDto): Promise<Barber> {
@@ -177,7 +177,7 @@ export class BarberService {
     const uploadResult = await this.storageService.uploadFile(
       'profiles',
       storageFile,
-      fileName,
+      fileName
     );
 
     // Update barber with new image URL
@@ -230,8 +230,8 @@ export class BarberService {
         and(
           eq(barbers.isActive, true),
           eq(availabilities.dayOfWeek, dayOfWeek),
-          eq(availabilities.isActive, true),
-        ),
+          eq(availabilities.isActive, true)
+        )
       );
 
     return availableBarbers;
@@ -247,12 +247,12 @@ export class BarberService {
         and(
           eq(
             bookings.appointmentDateTime,
-            new Date(`${dateStr}T${startTime}:00`),
-          ),
+            new Date(`${dateStr}T${startTime}:00`)
+          )
           // Add logic for time overlap checking
-        ),
+        )
       );
 
-    return busyBookings.map((booking) => booking.barberId);
+    return busyBookings.map(booking => booking.barberId);
   }
 }

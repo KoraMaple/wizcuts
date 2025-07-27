@@ -1,10 +1,12 @@
 # SonarQube Cloud Integration Guide
 
-This guide explains how to set up and use SonarQube Cloud for code quality analysis in the WizCuts project.
+This guide explains how to set up and use SonarQube Cloud for code quality analysis in the WizCuts
+project.
 
 ## Overview
 
-The project has been configured to use SonarQube Cloud instead of Codecov for code quality and coverage analysis. SonarQube provides comprehensive code quality metrics including:
+The project has been configured to use SonarQube Cloud instead of Codecov for code quality and
+coverage analysis. SonarQube provides comprehensive code quality metrics including:
 
 - Code coverage analysis
 - Security vulnerability detection
@@ -31,7 +33,7 @@ The project has been configured to use SonarQube Cloud instead of Codecov for co
 
 Add the following secrets to your GitHub repository:
 
-``` bash
+```bash
 SONAR_TOKEN: Your SonarQube Cloud token
 ```
 
@@ -64,14 +66,15 @@ sonar.typescript.lcov.reportPaths=frontend/coverage/lcov.info,backend/coverage/l
 sonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info,backend/coverage/lcov.info
 ```
 
-**Important**: Update the `sonar.organization` value with your actual organization key from SonarCloud.
+**Important**: Update the `sonar.organization` value with your actual organization key from
+SonarCloud.
 
 ## CI/CD Integration
 
 The GitHub Actions workflow (`.github/workflows/ci-cd.yml`) includes:
 
 1. **Frontend Tests & Coverage**: Runs tests and generates coverage reports
-2. **Backend Tests & Coverage**: Runs tests and generates coverage reports  
+2. **Backend Tests & Coverage**: Runs tests and generates coverage reports
 3. **SonarCloud Analysis**: Analyzes code quality and uploads coverage
 4. **Security Scan**: Runs Trivy security scanner
 5. **Deployment**: Deploys to staging/production based on branch
@@ -83,7 +86,7 @@ sonarcloud:
   name: SonarCloud Analysis
   runs-on: ubuntu-latest
   needs: [frontend-test, backend-test]
-  
+
   steps:
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
@@ -101,7 +104,7 @@ sonarcloud:
 - Coverage threshold: 70% for all metrics
 - Setup file: `frontend/jest.setup.js`
 
-### Backend (Jest + NestJS)  
+### Backend (Jest + NestJS)
 
 - Test framework: Jest with ts-jest
 - Coverage reporters: text, html, json, lcov
@@ -142,8 +145,7 @@ npm run test:watch      # Run in watch mode
 
 ### SonarCloud Dashboard
 
-Access your project dashboard at:
-`https://sonarcloud.io/project/overview?id=wizcuts-barber-shop`
+Access your project dashboard at: `https://sonarcloud.io/project/overview?id=wizcuts-barber-shop`
 
 ### GitHub Integration
 
@@ -183,7 +185,7 @@ Enable debug logging in GitHub Actions:
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    SONAR_SCANNER_OPTS: "-Dsonar.verbose=true"
+    SONAR_SCANNER_OPTS: '-Dsonar.verbose=true'
 ```
 
 ## Migration from Codecov

@@ -5,12 +5,7 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "collectCoverageFrom": [
-    "src/**/*.(t|j)s",
-    "!src/**/*.spec.ts",
-    "!src/**/*.interface.ts",
-    "!src/main.ts"
-  ],
+  "collectCoverageFrom": ["src/**/*.(t|j)s", "!src/**/*.spec.ts", "!src/**/*.interface.ts", "!src/main.ts"],
   "coverageDirectory": "coverage",
   "testEnvironment": "node",
   "coverageReporters": ["text", "lcov", "html"],

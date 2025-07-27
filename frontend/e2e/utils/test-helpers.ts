@@ -18,9 +18,9 @@ export class TestHelpers {
    * Take a screenshot with a descriptive name
    */
   async takeScreenshot(name: string) {
-    await this.page.screenshot({ 
+    await this.page.screenshot({
       path: `test-results/screenshots/${name}-${Date.now()}.png`,
-      fullPage: true 
+      fullPage: true,
     });
   }
 
@@ -30,7 +30,7 @@ export class TestHelpers {
   async elementExists(selector: string): Promise<boolean> {
     try {
       const element = this.page.locator(selector);
-      return await element.count() > 0;
+      return (await element.count()) > 0;
     } catch {
       return false;
     }
@@ -79,8 +79,8 @@ export class TestHelpers {
    */
   async checkForConsoleErrors(): Promise<string[]> {
     const errors: string[] = [];
-    
-    this.page.on('console', (msg) => {
+
+    this.page.on('console', msg => {
       if (msg.type() === 'error') {
         errors.push(msg.text());
       }
@@ -93,7 +93,7 @@ export class TestHelpers {
    * Mock API responses for testing
    */
   async mockApiResponse(url: string, response: any) {
-    await this.page.route(url, (route) => {
+    await this.page.route(url, route => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -153,7 +153,7 @@ export class TestHelpers {
   async clearAllInputs() {
     const inputs = this.page.locator('input, textarea');
     const count = await inputs.count();
-    
+
     for (let i = 0; i < count; i++) {
       await inputs.nth(i).clear();
     }
@@ -168,13 +168,13 @@ export class TestHelpers {
       '.loading',
       '.spinner',
       '[data-testid="loading"]',
-      '.skeleton'
+      '.skeleton',
     ];
 
     for (const selector of loadingSelectors) {
       const elements = this.page.locator(selector);
       const count = await elements.count();
-      
+
       if (count > 0) {
         await expect(elements.first()).toBeHidden({ timeout: 30000 });
       }

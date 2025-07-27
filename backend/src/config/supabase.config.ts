@@ -30,7 +30,7 @@ export class SupabaseConfigService {
   getServiceRoleClient(): SupabaseClient {
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
     const serviceRoleKey = this.configService.get<string>(
-      'SUPABASE_SERVICE_ROLE_KEY',
+      'SUPABASE_SERVICE_ROLE_KEY'
     );
 
     if (!supabaseUrl || !serviceRoleKey) {
@@ -49,7 +49,7 @@ export class SupabaseConfigService {
   getDatabaseUrl(): string {
     const environmentMode = this.configService.get<string>(
       'ENVIRONMENT_MODE',
-      'local',
+      'local'
     );
 
     if (environmentMode === 'local') {

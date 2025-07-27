@@ -40,12 +40,12 @@ function validateEnvironment(): EnvironmentConfig {
     'CLERK_SECRET_KEY',
   ];
 
-  const missingVars = requiredVars.filter((varName) => !process.env[varName]);
+  const missingVars = requiredVars.filter(varName => !process.env[varName]);
 
   if (missingVars.length > 0) {
     throw new Error(
       `Missing required environment variables: ${missingVars.join(', ')}\n` +
-        'Please check your .env file and ensure all required variables are set.',
+        'Please check your .env file and ensure all required variables are set.'
     );
   }
 
@@ -85,13 +85,13 @@ export const env = validateEnvironment();
 if (env.nodeEnv === 'development') {
   console.log('🔧 WizCuts Environment Configuration:');
   console.log(
-    `   Database: ${env.databaseUrl ? '✅ Connected' : '❌ Missing'}`,
+    `   Database: ${env.databaseUrl ? '✅ Connected' : '❌ Missing'}`
   );
   console.log(
-    `   Supabase: ${env.supabaseUrl ? '✅ Connected' : '❌ Missing'}`,
+    `   Supabase: ${env.supabaseUrl ? '✅ Connected' : '❌ Missing'}`
   );
   console.log(
-    `   Clerk Auth: ${env.clerkSecretKey ? '✅ Connected' : '❌ Missing'}`,
+    `   Clerk Auth: ${env.clerkSecretKey ? '✅ Connected' : '❌ Missing'}`
   );
   console.log(`   Mode: ${env.environmentMode}`);
   console.log(`   Port: ${env.port}`);

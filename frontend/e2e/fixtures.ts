@@ -39,7 +39,7 @@ class BookingPage {
   async fillCustomerInfo(name: string, email: string, phone?: string) {
     await this.helpers.fillAndVerify('[name="customerName"]', name);
     await this.helpers.fillAndVerify('[name="email"]', email);
-    
+
     if (phone) {
       await this.helpers.fillAndVerify('[name="phone"]', phone);
     }
@@ -64,15 +64,18 @@ class BookingPage {
   }
 
   async submitBooking() {
-    const submitButton = this.page.locator('button[type="submit"], [data-testid="submit-booking"]');
+    const submitButton = this.page.locator(
+      'button[type="submit"], [data-testid="submit-booking"]'
+    );
     await submitButton.click();
-    
+
     // Wait for submission to complete
     await this.helpers.waitForLoadingToComplete();
   }
 
   async getConfirmationMessage() {
-    const confirmationSelector = '.confirmation, [data-testid="confirmation"], .success';
+    const confirmationSelector =
+      '.confirmation, [data-testid="confirmation"], .success';
     const element = await this.helpers.waitForElement(confirmationSelector);
     return await element.textContent();
   }
@@ -85,7 +88,7 @@ class BookingPage {
 
 // Example usage in a test file:
 // import { test, expect } from './fixtures';
-// 
+//
 // test('should complete booking flow', async ({ bookingPage, helpers }) => {
 //   await bookingPage.navigateToBooking();
 //   await bookingPage.fillCustomerInfo('John Doe', 'john@example.com');

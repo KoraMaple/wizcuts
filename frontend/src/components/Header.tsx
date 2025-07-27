@@ -1,29 +1,29 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Menu, X, Scissors, Phone, MapPin } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { UserButton, SignInButton, useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Menu, X, Scissors, Phone, MapPin } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { UserButton, SignInButton, useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
-  readonly className?: string
+  readonly className?: string;
 }
 
 export default function Header({ className }: HeaderProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const { isSignedIn, isLoaded } = useUser()
-  const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems = [
     { name: 'Services', href: '#services' },
@@ -31,7 +31,7 @@ export default function Header({ className }: HeaderProps) {
     { name: 'Gallery', href: '#gallery' },
     { name: 'About', href: '#about' },
     { name: 'Contact', href: '#contact' },
-  ]
+  ];
 
   return (
     <motion.header
@@ -40,8 +40,8 @@ export default function Header({ className }: HeaderProps) {
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        scrolled 
-          ? 'bg-slate-900/95 backdrop-blur-md border-b border-slate-700/50' 
+        scrolled
+          ? 'bg-slate-900/95 backdrop-blur-md border-b border-slate-700/50'
           : 'bg-transparent',
         className
       )}
@@ -60,8 +60,12 @@ export default function Header({ className }: HeaderProps) {
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full opacity-75 animate-pulse"></div>
             </div>
             <div>
-              <h1 className="text-2xl font-display font-bold text-white">WizCuts</h1>
-              <p className="text-xs text-slate-300 font-light tracking-wider">PREMIUM GROOMING</p>
+              <h1 className="text-2xl font-display font-bold text-white">
+                WizCuts
+              </h1>
+              <p className="text-xs text-slate-300 font-light tracking-wider">
+                PREMIUM GROOMING
+              </p>
             </div>
           </motion.div>
 
@@ -76,7 +80,9 @@ export default function Header({ className }: HeaderProps) {
                 transition={{ delay: 0.3 + index * 0.1 }}
                 className="text-slate-200 hover:text-amber-400 transition-colors duration-300 font-medium tracking-wide relative group"
                 onClick={() => {
-                  document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })
+                  document
+                    .querySelector(item.href)
+                    ?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
                 {item.name}
@@ -97,7 +103,7 @@ export default function Header({ className }: HeaderProps) {
                 <span>Downtown</span>
               </div>
             </div>
-            
+
             {/* Authentication Section */}
             {isLoaded && (
               <div className="flex items-center space-x-4">
@@ -111,38 +117,43 @@ export default function Header({ className }: HeaderProps) {
                       whileTap={{ scale: 0.95 }}
                       className="bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-400/25 transition-all duration-300"
                       onClick={() => {
-                        document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })
+                        document
+                          .querySelector('#booking')
+                          ?.scrollIntoView({ behavior: 'smooth' });
                       }}
                     >
                       Book Now
                     </motion.button>
-                    <UserButton 
+                    <UserButton
                       appearance={{
                         elements: {
-                          avatarBox: "w-10 h-10 rounded-full border-2 border-amber-400/50 hover:border-amber-400 transition-colors",
-                          userButtonPopoverCard: "bg-slate-800 border border-slate-600 shadow-2xl",
-                          userButtonPopoverActionButton: "text-slate-200 hover:bg-slate-700 hover:text-amber-400 transition-colors",
-                          userButtonPopoverActionButtonText: "text-slate-200",
-                          userButtonPopoverActionButtonIcon: "text-slate-400",
-                          userButtonPopoverFooter: "hidden", // Hide the footer
-                        }
+                          avatarBox:
+                            'w-10 h-10 rounded-full border-2 border-amber-400/50 hover:border-amber-400 transition-colors',
+                          userButtonPopoverCard:
+                            'bg-slate-800 border border-slate-600 shadow-2xl',
+                          userButtonPopoverActionButton:
+                            'text-slate-200 hover:bg-slate-700 hover:text-amber-400 transition-colors',
+                          userButtonPopoverActionButtonText: 'text-slate-200',
+                          userButtonPopoverActionButtonIcon: 'text-slate-400',
+                          userButtonPopoverFooter: 'hidden', // Hide the footer
+                        },
                       }}
                       userProfileMode="navigation"
                       userProfileUrl="/profile"
                     />
                   </div>
                 ) : (
-                    <motion.button
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.5 }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-400/25 transition-all duration-300"
-                      onClick={() => router.push('/sign-in')}
-                    >
-                      Sign In
-                    </motion.button>
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-400/25 transition-all duration-300"
+                    onClick={() => router.push('/sign-in')}
+                  >
+                    Sign In
+                  </motion.button>
                 )}
               </div>
             )}
@@ -178,8 +189,10 @@ export default function Header({ className }: HeaderProps) {
                   transition={{ delay: index * 0.1 }}
                   className="text-slate-200 hover:text-amber-400 transition-colors duration-300 font-medium py-2"
                   onClick={() => {
-                    setIsOpen(false)
-                    document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })
+                    setIsOpen(false);
+                    document
+                      .querySelector(item.href)
+                      ?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
                   {item.name}
@@ -201,7 +214,7 @@ export default function Header({ className }: HeaderProps) {
                     <span>123 Style Street, Downtown</span>
                   </div>
                 </div>
-                
+
                 {/* Mobile Authentication */}
                 {isLoaded && (
                   <div className="space-y-3">
@@ -210,20 +223,25 @@ export default function Header({ className }: HeaderProps) {
                         <button
                           className="w-full bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-3 rounded-full font-semibold"
                           onClick={() => {
-                            setIsOpen(false)
-                            document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })
+                            setIsOpen(false);
+                            document
+                              .querySelector('#booking')
+                              ?.scrollIntoView({ behavior: 'smooth' });
                           }}
                         >
                           Book Your Appointment
                         </button>
                         <div className="flex items-center justify-center pt-2">
-                          <UserButton 
+                          <UserButton
                             appearance={{
                               elements: {
-                                avatarBox: "w-10 h-10 rounded-full border-2 border-amber-400/50",
-                                userButtonPopoverCard: "bg-slate-800 border border-slate-600",
-                                userButtonPopoverActionButton: "text-slate-200 hover:bg-slate-700 hover:text-amber-400",
-                              }
+                                avatarBox:
+                                  'w-10 h-10 rounded-full border-2 border-amber-400/50',
+                                userButtonPopoverCard:
+                                  'bg-slate-800 border border-slate-600',
+                                userButtonPopoverActionButton:
+                                  'text-slate-200 hover:bg-slate-700 hover:text-amber-400',
+                              },
                             }}
                             userProfileMode="navigation"
                             userProfileUrl="/profile"
@@ -245,5 +263,5 @@ export default function Header({ className }: HeaderProps) {
         )}
       </nav>
     </motion.header>
-  )
+  );
 }

@@ -27,7 +27,7 @@ npm run e2e:debug
 ## Test Files
 
 - `home.spec.ts` - Homepage functionality tests
-- `navigation.spec.ts` - Navigation and routing tests  
+- `navigation.spec.ts` - Navigation and routing tests
 - `booking.spec.ts` - Booking system tests
 - `performance.spec.ts` - Performance and accessibility tests
 

@@ -1,14 +1,14 @@
-import "@testing-library/jest-dom";
-import React from "react";
+import '@testing-library/jest-dom';
+import React from 'react';
 
 // Mock Next.js router
-jest.mock("next/router", () => ({
+jest.mock('next/router', () => ({
   useRouter() {
     return {
-      route: "/",
-      pathname: "/",
+      route: '/',
+      pathname: '/',
       query: {},
-      asPath: "/",
+      asPath: '/',
       push: jest.fn(),
       pop: jest.fn(),
       reload: jest.fn(),
@@ -27,7 +27,7 @@ jest.mock("next/router", () => ({
 }));
 
 // Mock Next.js navigation
-jest.mock("next/navigation", () => ({
+jest.mock('next/navigation', () => ({
   useRouter() {
     return {
       push: jest.fn(),
@@ -42,21 +42,34 @@ jest.mock("next/navigation", () => ({
     return new URLSearchParams();
   },
   usePathname() {
-    return "/";
+    return '/';
   },
 }));
 
 // Mock framer-motion
-jest.mock("framer-motion", () => ({
-  motion: new Proxy({}, {
-    get: (target, prop) => {
-      // Return a component that filters out framer-motion props
-      return function MockMotionComponent({ children, whileHover, whileTap, whileInView, initial, animate, transition, variants, ...props }) {
-        const { createElement } = require('react');
-        return createElement(prop, props, children);
-      };
+jest.mock('framer-motion', () => ({
+  motion: new Proxy(
+    {},
+    {
+      get: (target, prop) => {
+        // Return a component that filters out framer-motion props
+        return function MockMotionComponent({
+          children,
+          whileHover,
+          whileTap,
+          whileInView,
+          initial,
+          animate,
+          transition,
+          variants,
+          ...props
+        }) {
+          const { createElement } = require('react');
+          return createElement(prop, props, children);
+        };
+      },
     }
-  }),
+  ),
   AnimatePresence: ({ children }) => children,
   useAnimation: () => ({
     start: jest.fn(),
@@ -82,9 +95,9 @@ global.ResizeObserver = class ResizeObserver {
 };
 
 // Mock window.matchMedia
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: jest.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,

@@ -2,10 +2,13 @@
 
 ## Overview
 
-We've successfully implemented a Clerk-based authentication system for the WizCuts booking platform with the following key features:
+We've successfully implemented a Clerk-based authentication system for the WizCuts booking platform
+with the following key features:
 
-- **Authentication Only Required for Booking Confirmation**: Users can browse services and select appointment details without signing in, but must authenticate to confirm their booking
-- **Luxury Brand Design**: Custom-styled authentication components that match the WizCuts luxury aesthetic
+- **Authentication Only Required for Booking Confirmation**: Users can browse services and select
+  appointment details without signing in, but must authenticate to confirm their booking
+- **Luxury Brand Design**: Custom-styled authentication components that match the WizCuts luxury
+  aesthetic
 - **Social Authentication**: Google and Facebook OAuth providers for seamless user experience
 - **Secure Middleware**: Route protection and user session management
 
@@ -16,7 +19,7 @@ We've successfully implemented a Clerk-based authentication system for the WizCu
 ```
 User Journey:
 ├── Browse Services (No Auth Required)
-├── Select Barber & Time (No Auth Required)  
+├── Select Barber & Time (No Auth Required)
 ├── Click "Continue to Confirmation"
 ├── Redirect to /booking/confirm
 ├── Middleware Intercepts → Redirect to /sign-in if not authenticated
@@ -45,18 +48,21 @@ User Journey:
 ### 3. Key Features
 
 #### 🎨 Luxury Design System
+
 - Deep blue (#1a2332) and charcoal (#2c2c2c) backgrounds
 - Gold (#d4af37) accent colors for CTAs and highlights
 - Cream (#f8f6f0) text for high contrast
 - Smooth animations and hover effects
 
 #### 🔐 Security Features
+
 - JWT token validation through Clerk
 - Protected API routes with user context
 - Secure middleware with async/await pattern
 - CSRF protection and secure headers
 
 #### 📱 User Experience
+
 - One-click social authentication
 - Seamless redirect flow
 - Loading states and error handling
@@ -73,6 +79,7 @@ cp .env.local.example .env.local
 ```
 
 Update the values:
+
 ```env
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
 CLERK_SECRET_KEY=sk_test_your_key_here
@@ -92,12 +99,14 @@ CLERK_SECRET_KEY=sk_test_your_key_here
 ### 3. Social Provider Configuration
 
 #### Google OAuth Setup
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
 2. Create OAuth 2.0 credentials
 3. Add authorized redirect URIs in Clerk format
 4. Copy Client ID and Secret to Clerk dashboard
 
 #### Facebook OAuth Setup
+
 1. Go to [Facebook Developers](https://developers.facebook.com)
 2. Create a new app
 3. Add Facebook Login product
@@ -107,12 +116,14 @@ CLERK_SECRET_KEY=sk_test_your_key_here
 ## Testing the Implementation
 
 ### 1. Start Development Server
+
 ```bash
 cd frontend
 npm run dev
 ```
 
 ### 2. Test User Flow
+
 1. Visit `http://localhost:3001/booking`
 2. Select service, barber, and time
 3. Click "Continue to Confirmation"
@@ -122,6 +133,7 @@ npm run dev
 7. Complete booking
 
 ### 3. Verify Authentication
+
 - Check user is authenticated in confirmation page
 - Verify appointment data is passed correctly
 - Test sign-out and re-authentication
@@ -129,17 +141,19 @@ npm run dev
 ## Next Steps
 
 ### Backend Integration
+
 1. **Connect Frontend API to NestJS Backend**:
+
    ```typescript
    // In /frontend/src/app/api/appointments/route.ts
    const backendResponse = await fetch('http://localhost:3005/api/bookings', {
      method: 'POST',
      headers: {
        'Content-Type': 'application/json',
-       'Authorization': `Bearer ${clerkToken}`,
+       Authorization: `Bearer ${clerkToken}`,
      },
      body: JSON.stringify(appointmentData),
-   })
+   });
    ```
 
 2. **Update Backend Authentication Guard**:
@@ -152,6 +166,7 @@ npm run dev
    - Barber notifications
 
 ### Production Deployment
+
 1. **Environment Variables**:
    - Set production Clerk keys
    - Configure production URLs
@@ -191,9 +206,11 @@ frontend/
 ```json
 {
   "@clerk/nextjs": "^6.7.3",
-  "@clerk/themes": "^2.1.41", 
+  "@clerk/themes": "^2.1.41",
   "react-icons": "^5.4.0"
 }
 ```
 
-The authentication system is now fully implemented and ready for production use. The booking flow provides a seamless experience where users can browse and select services without barriers, then authenticate only when they're ready to confirm their appointment.
+The authentication system is now fully implemented and ready for production use. The booking flow
+provides a seamless experience where users can browse and select services without barriers, then
+authenticate only when they're ready to confirm their appointment.

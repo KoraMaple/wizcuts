@@ -4,7 +4,9 @@ import Hero from '../Hero';
 describe('Hero Component', () => {
   it('renders hero section', () => {
     render(<Hero />);
-    const heading = screen.getByRole('heading', { name: /Redefine Your Style/i });
+    const heading = screen.getByRole('heading', {
+      name: /Redefine Your Style/i,
+    });
     expect(heading).toBeInTheDocument();
   });
 
@@ -16,7 +18,9 @@ describe('Hero Component', () => {
 
   it('displays subtitle text', () => {
     render(<Hero />);
-    expect(screen.getByText(/Experience the art of sophisticated grooming/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Experience the art of sophisticated grooming/)
+    ).toBeInTheDocument();
   });
 
   it('displays CTA buttons', () => {

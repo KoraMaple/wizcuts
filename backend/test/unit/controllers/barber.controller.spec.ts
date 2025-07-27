@@ -94,7 +94,7 @@ describe('BarberController', () => {
 
       // Act & Assert
       await expect(controller.create(mockCreateBarberDto)).rejects.toThrow(
-        'Database connection failed',
+        'Database connection failed'
       );
       expect(service.create).toHaveBeenCalledWith(mockCreateBarberDto);
     });
@@ -103,7 +103,7 @@ describe('BarberController', () => {
       // Arrange
       const invalidDto = {} as CreateBarberDto;
       mockBarberService.create.mockRejectedValue(
-        new Error('Validation failed'),
+        new Error('Validation failed')
       );
 
       // Act & Assert
@@ -149,7 +149,7 @@ describe('BarberController', () => {
 
       // Act & Assert
       await expect(controller.findAll()).rejects.toThrow(
-        'Database query failed',
+        'Database query failed'
       );
       expect(service.findAll).toHaveBeenCalled();
     });
@@ -189,14 +189,14 @@ describe('BarberController', () => {
     it('should handle NotFoundException', async () => {
       // Arrange
       const notFoundError = new NotFoundException(
-        'Barber with ID 999 not found',
+        'Barber with ID 999 not found'
       );
       mockBarberService.findOne.mockRejectedValue(notFoundError);
 
       // Act & Assert
       await expect(controller.findOne(999)).rejects.toThrow(NotFoundException);
       await expect(controller.findOne(999)).rejects.toThrow(
-        'Barber with ID 999 not found',
+        'Barber with ID 999 not found'
       );
       expect(service.findOne).toHaveBeenCalledWith(999);
     });
@@ -215,12 +215,12 @@ describe('BarberController', () => {
       // Arrange
       const negativeId = -1;
       mockBarberService.findOne.mockRejectedValue(
-        new NotFoundException('Barber with ID -1 not found'),
+        new NotFoundException('Barber with ID -1 not found')
       );
 
       // Act & Assert
       await expect(controller.findOne(negativeId)).rejects.toThrow(
-        NotFoundException,
+        NotFoundException
       );
       expect(service.findOne).toHaveBeenCalledWith(negativeId);
     });
@@ -228,7 +228,7 @@ describe('BarberController', () => {
     it('should handle zero ID', async () => {
       // Arrange
       mockBarberService.findOne.mockRejectedValue(
-        new NotFoundException('Barber with ID 0 not found'),
+        new NotFoundException('Barber with ID 0 not found')
       );
 
       // Act & Assert
@@ -269,13 +269,13 @@ describe('BarberController', () => {
     it('should handle NotFoundException during update', async () => {
       // Arrange
       const notFoundError = new NotFoundException(
-        'Barber with ID 999 not found',
+        'Barber with ID 999 not found'
       );
       mockBarberService.update.mockRejectedValue(notFoundError);
 
       // Act & Assert
       await expect(controller.update(999, mockUpdateBarberDto)).rejects.toThrow(
-        NotFoundException,
+        NotFoundException
       );
       expect(service.update).toHaveBeenCalledWith(999, mockUpdateBarberDto);
     });
@@ -314,7 +314,7 @@ describe('BarberController', () => {
 
       // Act & Assert
       await expect(controller.update(1, mockUpdateBarberDto)).rejects.toThrow(
-        'Update operation failed',
+        'Update operation failed'
       );
       expect(service.update).toHaveBeenCalledWith(1, mockUpdateBarberDto);
     });
@@ -337,7 +337,7 @@ describe('BarberController', () => {
     it('should handle NotFoundException during removal', async () => {
       // Arrange
       const notFoundError = new NotFoundException(
-        'Barber with ID 999 not found',
+        'Barber with ID 999 not found'
       );
       mockBarberService.remove.mockRejectedValue(notFoundError);
 
@@ -359,13 +359,13 @@ describe('BarberController', () => {
     it('should handle foreign key constraint errors', async () => {
       // Arrange
       const constraintError = new Error(
-        'Cannot delete barber with existing bookings',
+        'Cannot delete barber with existing bookings'
       );
       mockBarberService.remove.mockRejectedValue(constraintError);
 
       // Act & Assert
       await expect(controller.remove(1)).rejects.toThrow(
-        'Cannot delete barber with existing bookings',
+        'Cannot delete barber with existing bookings'
       );
       expect(service.remove).toHaveBeenCalledWith(1);
     });
@@ -386,7 +386,7 @@ describe('BarberController', () => {
 
       // Assert
       expect(service.findOne).toHaveBeenCalledTimes(3);
-      results.forEach((result) => {
+      results.forEach(result => {
         expect(result).toEqual(mockBarber);
       });
     });

@@ -16,7 +16,7 @@ export function createDatabaseConnection(databaseUrl?: string) {
       ENVIRONMENT_MODE: env.environmentMode,
     });
     throw new Error(
-      'Database connection string is required. Please set DATABASE_URL or SUPABASE_DB_URL in your .env file',
+      'Database connection string is required. Please set DATABASE_URL or SUPABASE_DB_URL in your .env file'
     );
   }
 
@@ -36,7 +36,7 @@ export function createDatabaseConnection(databaseUrl?: string) {
     console.log('✅ Database connected successfully');
   });
 
-  pool.on('error', (err) => {
+  pool.on('error', err => {
     console.error('❌ Database connection error:', err);
   });
 

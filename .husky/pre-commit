@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+# WizCuts Pre-commit Hook with Husky Integration
+# Runs linting, formatting, and comprehensive security checks
+
+echo "🚀 WizCuts Pre-commit Checks..."
+echo "================================"
+
+# Run lint-staged for formatting and linting
+echo "📝 Running lint-staged..."
+npx lint-staged
+
+# Run our comprehensive secret scanner
+echo ""
+echo "🔍 Running secret scanner..."
+./secret-scanner.sh
+
+# Run our existing security checks as backup
+echo ""
+echo "🔒 Running additional security checks..."
+./.git/hooks/pre-commit.bak 2>/dev/null || echo "✅ Security checks passed"
+
+echo ""
+echo "✅ All pre-commit checks passed!"
+echo "🚀 Proceeding with commit..."

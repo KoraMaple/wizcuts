@@ -1,0 +1,96 @@
+# Prettier ignore patterns
+
+# Dependencies
+node_modules/
+**/node_modules/
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+
+# Generated files
+**/coverage/
+**/.nyc_output/
+**/.cache/
+
+# Environment files
+.env*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Package manager lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Database
+*.db
+*.sqlite
+
+# Generated files
+*.d.ts.map
+*.js.map
+coverage/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Compiled files
+*.tsbuildinfo
+
+# Package files
+*.tgz
+*.tar.gz
+
+# Documentation
+docs/api/
+
+# Security files
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+secrets/

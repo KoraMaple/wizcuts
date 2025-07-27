@@ -200,10 +200,10 @@ describe('BookingService', () => {
 
       // Act & Assert
       await expect(
-        service.create(mockCreateBookingDto, mockAuthUser),
+        service.create(mockCreateBookingDto, mockAuthUser)
       ).rejects.toThrow(NotFoundException);
       await expect(
-        service.create(mockCreateBookingDto, mockAuthUser),
+        service.create(mockCreateBookingDto, mockAuthUser)
       ).rejects.toThrow('Barber with ID 1 not found');
     });
 
@@ -228,7 +228,7 @@ describe('BookingService', () => {
 
       // Act & Assert
       await expect(
-        service.create(mockCreateBookingDto, mockAuthUser),
+        service.create(mockCreateBookingDto, mockAuthUser)
       ).rejects.toThrow('Time slot is already booked');
     });
 
@@ -299,7 +299,7 @@ describe('BookingService', () => {
       expect(mockInsertChain.values).toHaveBeenCalledWith(
         expect.objectContaining({
           totalPrice: '123.45',
-        }),
+        })
       );
     });
 
@@ -325,7 +325,7 @@ describe('BookingService', () => {
 
       // Act & Assert
       await expect(
-        service.create(mockCreateBookingDto, mockAuthUser),
+        service.create(mockCreateBookingDto, mockAuthUser)
       ).rejects.toThrow('Database error');
     });
   });
@@ -482,7 +482,7 @@ describe('BookingService', () => {
       // Act & Assert
       await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
       await expect(service.findOne(999)).rejects.toThrow(
-        'Booking with ID 999 not found',
+        'Booking with ID 999 not found'
       );
     });
 
@@ -548,7 +548,7 @@ describe('BookingService', () => {
 
       // Act & Assert
       await expect(service.findUserBookings('user_123')).rejects.toThrow(
-        'User query failed',
+        'User query failed'
       );
     });
   });
@@ -625,7 +625,7 @@ describe('BookingService', () => {
 
       // Act & Assert
       await expect(service.update(999, mockUpdateBookingDto)).rejects.toThrow(
-        NotFoundException,
+        NotFoundException
       );
     });
 
@@ -640,7 +640,7 @@ describe('BookingService', () => {
 
       // Act & Assert
       await expect(service.update(1, mockUpdateBookingDto)).rejects.toThrow(
-        'Update failed',
+        'Update failed'
       );
     });
   });
@@ -735,10 +735,10 @@ describe('BookingService', () => {
 
       // Act & Assert
       await expect(service.cancel(1, 'different_user')).rejects.toThrow(
-        BadRequestException,
+        BadRequestException
       );
       await expect(service.cancel(1, 'different_user')).rejects.toThrow(
-        'You can only cancel your own bookings',
+        'You can only cancel your own bookings'
       );
     });
 
@@ -756,10 +756,10 @@ describe('BookingService', () => {
 
       // Act & Assert
       await expect(service.cancel(1, 'user_123')).rejects.toThrow(
-        BadRequestException,
+        BadRequestException
       );
       await expect(service.cancel(1, 'user_123')).rejects.toThrow(
-        'Booking is already cancelled',
+        'Booking is already cancelled'
       );
     });
   });
@@ -810,7 +810,7 @@ describe('BookingService', () => {
       // Act & Assert
       await expect(service.confirm(1)).rejects.toThrow(BadRequestException);
       await expect(service.confirm(1)).rejects.toThrow(
-        'Only pending bookings can be confirmed',
+        'Only pending bookings can be confirmed'
       );
     });
 
@@ -843,7 +843,7 @@ describe('BookingService', () => {
       // Act & Assert
       // This should either handle the invalid date gracefully or throw an appropriate error
       await expect(
-        service.create(invalidBookingDto, mockAuthUser),
+        service.create(invalidBookingDto, mockAuthUser)
       ).rejects.toThrow();
     });
 

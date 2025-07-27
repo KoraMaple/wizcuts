@@ -93,7 +93,7 @@ describe('StorageService', () => {
     }).compile();
 
     supabaseStorageService = module.get<SupabaseStorageService>(
-      SupabaseStorageService,
+      SupabaseStorageService
     );
     localStorageService = module.get<LocalStorageService>(LocalStorageService);
 
@@ -106,8 +106,8 @@ describe('StorageService', () => {
     mockedFs.readdirSync.mockReturnValue([]);
     mockedPath.join.mockImplementation((...paths) => paths.join('/'));
     mockedPath.dirname.mockReturnValue('/tmp/uploads/profiles');
-    mockedPath.resolve.mockImplementation((p) => `/resolved/${p}`);
-    mockedPath.extname.mockImplementation((filename) => {
+    mockedPath.resolve.mockImplementation(p => `/resolved/${p}`);
+    mockedPath.extname.mockImplementation(filename => {
       const parts = filename.split('.');
       return parts.length > 1 ? `.${parts.pop()}` : '';
     });
@@ -133,13 +133,13 @@ describe('StorageService', () => {
 
         mockSupabaseClient.storage.upload.mockResolvedValue(mockUploadResult);
         mockSupabaseClient.storage.getPublicUrl.mockReturnValue(
-          mockPublicUrlResult,
+          mockPublicUrlResult
         );
 
         const result = await supabaseStorageService.uploadFile(
           'profiles',
           mockFile,
-          'test.jpg',
+          'test.jpg'
         );
 
         expect(result).toEqual({
@@ -149,7 +149,7 @@ describe('StorageService', () => {
         });
 
         expect(mockSupabaseClient.storage.from).toHaveBeenCalledWith(
-          'profiles',
+          'profiles'
         );
         expect(mockSupabaseClient.storage.upload).toHaveBeenCalledWith(
           'test.jpg',
@@ -157,7 +157,7 @@ describe('StorageService', () => {
           {
             contentType: 'image/jpeg',
             upsert: false,
-          },
+          }
         );
       });
 
@@ -170,7 +170,7 @@ describe('StorageService', () => {
         mockSupabaseClient.storage.upload.mockResolvedValue(mockUploadResult);
 
         await expect(
-          supabaseStorageService.uploadFile('profiles', mockFile, 'test.jpg'),
+          supabaseStorageService.uploadFile('profiles', mockFile, 'test.jpg')
         ).rejects.toThrow('Upload failed: Upload failed');
       });
 
@@ -188,12 +188,12 @@ describe('StorageService', () => {
 
         mockSupabaseClient.storage.upload.mockResolvedValue(mockUploadResult);
         mockSupabaseClient.storage.getPublicUrl.mockReturnValue(
-          mockPublicUrlResult,
+          mockPublicUrlResult
         );
 
         const result = await supabaseStorageService.uploadFile(
           'profiles',
-          mockFile,
+          mockFile
         );
 
         expect(result.path).toMatch(/^profiles\/\d+\.jpg$/);
@@ -203,7 +203,7 @@ describe('StorageService', () => {
           {
             contentType: 'image/jpeg',
             upsert: false,
-          },
+          }
         );
       });
     });
@@ -220,7 +220,7 @@ describe('StorageService', () => {
         await supabaseStorageService.deleteFile('profiles', 'test.jpg');
 
         expect(mockSupabaseClient.storage.from).toHaveBeenCalledWith(
-          'profiles',
+          'profiles'
         );
         expect(mockSupabaseClient.storage.remove).toHaveBeenCalledWith([
           'test.jpg',
@@ -236,7 +236,7 @@ describe('StorageService', () => {
         mockSupabaseClient.storage.remove.mockResolvedValue(mockDeleteResult);
 
         await expect(
-          supabaseStorageService.deleteFile('profiles', 'test.jpg'),
+          supabaseStorageService.deleteFile('profiles', 'test.jpg')
         ).rejects.toThrow('Delete failed: Delete failed');
       });
     });
@@ -251,19 +251,19 @@ describe('StorageService', () => {
         };
 
         mockSupabaseClient.storage.getPublicUrl.mockReturnValue(
-          mockPublicUrlResult,
+          mockPublicUrlResult
         );
 
         const url = supabaseStorageService.getFileUrl('profiles', 'test.jpg');
 
         expect(url).toBe(
-          'https://supabase.co/storage/v1/object/public/profiles/test.jpg',
+          'https://supabase.co/storage/v1/object/public/profiles/test.jpg'
         );
         expect(mockSupabaseClient.storage.from).toHaveBeenCalledWith(
-          'profiles',
+          'profiles'
         );
         expect(mockSupabaseClient.storage.getPublicUrl).toHaveBeenCalledWith(
-          'test.jpg',
+          'test.jpg'
         );
       });
     });
@@ -281,7 +281,7 @@ describe('StorageService', () => {
 
         expect(files).toEqual(['file1.jpg', 'file2.png']);
         expect(mockSupabaseClient.storage.from).toHaveBeenCalledWith(
-          'profiles',
+          'profiles'
         );
         expect(mockSupabaseClient.storage.list).toHaveBeenCalledWith('', {
           limit: 100,
@@ -299,7 +299,7 @@ describe('StorageService', () => {
 
         const files = await supabaseStorageService.listFiles(
           'profiles',
-          'barber_',
+          'barber_'
         );
 
         expect(files).toEqual(['barber_1.jpg', 'barber_2.png']);
@@ -308,7 +308,7 @@ describe('StorageService', () => {
           {
             limit: 100,
             offset: 0,
-          },
+          }
         );
       });
 
@@ -321,7 +321,7 @@ describe('StorageService', () => {
         mockSupabaseClient.storage.list.mockResolvedValue(mockListResult);
 
         await expect(
-          supabaseStorageService.listFiles('profiles'),
+          supabaseStorageService.listFiles('profiles')
         ).rejects.toThrow('List files failed: List failed');
       });
     });
@@ -335,7 +335,7 @@ describe('StorageService', () => {
         const result = await localStorageService.uploadFile(
           'profiles',
           mockFile,
-          'test.jpg',
+          'test.jpg'
         );
 
         expect(result).toEqual({
@@ -346,11 +346,11 @@ describe('StorageService', () => {
 
         expect(mockedFs.mkdirSync).toHaveBeenCalledWith(
           '/tmp/uploads/profiles',
-          { recursive: true },
+          { recursive: true }
         );
         expect(mockedFs.writeFileSync).toHaveBeenCalledWith(
           '/tmp/uploads/profiles/test.jpg',
-          mockFile.buffer,
+          mockFile.buffer
         );
       });
 
@@ -359,7 +359,7 @@ describe('StorageService', () => {
 
         const result = await localStorageService.uploadFile(
           'profiles',
-          mockFile,
+          mockFile
         );
 
         expect(result.path).toMatch(/^profiles\/\d+_test\.jpg$/);
@@ -372,7 +372,7 @@ describe('StorageService', () => {
         });
 
         await expect(
-          localStorageService.uploadFile('profiles', mockFile, 'test.jpg'),
+          localStorageService.uploadFile('profiles', mockFile, 'test.jpg')
         ).rejects.toThrow('Failed to upload file: Write failed');
       });
     });
@@ -384,7 +384,7 @@ describe('StorageService', () => {
         await localStorageService.deleteFile('profiles', 'test.jpg');
 
         expect(mockedFs.unlinkSync).toHaveBeenCalledWith(
-          '/tmp/uploads/profiles/test.jpg',
+          '/tmp/uploads/profiles/test.jpg'
         );
       });
 
@@ -392,7 +392,7 @@ describe('StorageService', () => {
         mockedFs.existsSync.mockReturnValue(false);
 
         await expect(
-          localStorageService.deleteFile('profiles', 'nonexistent.jpg'),
+          localStorageService.deleteFile('profiles', 'nonexistent.jpg')
         ).rejects.toThrow('File not found: profiles/nonexistent.jpg');
       });
 
@@ -403,7 +403,7 @@ describe('StorageService', () => {
         });
 
         await expect(
-          localStorageService.deleteFile('profiles', 'test.jpg'),
+          localStorageService.deleteFile('profiles', 'test.jpg')
         ).rejects.toThrow('Failed to delete file: Delete failed');
       });
     });
@@ -414,7 +414,7 @@ describe('StorageService', () => {
 
         expect(url).toBe('/resolved//tmp/uploads/profiles/test.jpg');
         expect(mockedPath.resolve).toHaveBeenCalledWith(
-          '/tmp/uploads/profiles/test.jpg',
+          '/tmp/uploads/profiles/test.jpg'
         );
       });
     });
@@ -428,7 +428,7 @@ describe('StorageService', () => {
 
         expect(files).toEqual(['file1.jpg', 'file2.png']);
         expect(mockedFs.readdirSync).toHaveBeenCalledWith(
-          '/tmp/uploads/profiles',
+          '/tmp/uploads/profiles'
         );
       });
 
@@ -442,7 +442,7 @@ describe('StorageService', () => {
 
         const files = await localStorageService.listFiles(
           'profiles',
-          'barber_',
+          'barber_'
         );
 
         expect(files).toEqual(['barber_1.jpg', 'barber_2.png']);
@@ -463,7 +463,7 @@ describe('StorageService', () => {
         });
 
         await expect(localStorageService.listFiles('profiles')).rejects.toThrow(
-          'Failed to list files: Read failed',
+          'Failed to list files: Read failed'
         );
       });
     });

@@ -30,7 +30,7 @@ export class RealtimeService {
   // Broadcast event to all connected clients
   async broadcastEvent(
     channelName: string,
-    event: RealtimeEvent,
+    event: RealtimeEvent
   ): Promise<void> {
     try {
       const client = this.supabaseConfig.getClient();
@@ -47,7 +47,7 @@ export class RealtimeService {
       });
 
       this.logger.log(
-        `Event broadcasted on channel ${channelName}: ${event.type}`,
+        `Event broadcasted on channel ${channelName}: ${event.type}`
       );
     } catch (error: unknown) {
       const errorMessage =
@@ -111,7 +111,7 @@ export class RealtimeService {
   // Subscribe to database changes (requires RLS setup)
   subscribeToTableChanges(
     table: string,
-    callback: (payload: Record<string, unknown>) => void,
+    callback: (payload: Record<string, unknown>) => void
   ): () => void {
     const client = this.supabaseConfig.getClient();
     const channelName = `table-${table}`;
@@ -125,7 +125,7 @@ export class RealtimeService {
           schema: 'public',
           table,
         },
-        callback,
+        callback
       )
       .subscribe();
 

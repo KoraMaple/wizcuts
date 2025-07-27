@@ -1,20 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 
 export async function POST(request: NextRequest) {
   try {
     // Get user authentication
-    const { userId } = await auth()
-    
+    const { userId } = await auth();
+
     if (!userId) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
-      )
+      );
     }
 
     // Parse request body
-    const body = await request.json()
+    const body = await request.json();
     const {
       service,
       barber,
@@ -24,14 +24,14 @@ export async function POST(request: NextRequest) {
       price,
       userEmail,
       userName,
-    } = body
+    } = body;
 
     // Validate required fields
     if (!service || !barber || !date || !time || !price) {
       return NextResponse.json(
         { error: 'Missing required booking information' },
         { status: 400 }
-      )
+      );
     }
 
     // Create appointment data
@@ -47,17 +47,17 @@ export async function POST(request: NextRequest) {
       userName,
       status: 'confirmed',
       createdAt: new Date().toISOString(),
-    }
+    };
 
     // In a real application, you would:
     // 1. Save to your database via backend API
     // 2. Send confirmation email
     // 3. Create calendar event
     // 4. Notify the barber
-    
+
     // For now, we'll simulate a successful booking
     // You can replace this with actual backend API calls
-    console.log('Appointment booked:', appointmentData)
+    console.log('Appointment booked:', appointmentData);
 
     // Simulate API call to backend
     // const backendResponse = await fetch('http://localhost:3001/api/bookings', {
@@ -83,31 +83,30 @@ export async function POST(request: NextRequest) {
       success: true,
       appointment: appointmentData,
       message: 'Appointment confirmed successfully',
-    })
-
+    });
   } catch (error) {
-    console.error('Error creating appointment:', error)
+    console.error('Error creating appointment:', error);
     return NextResponse.json(
       { error: 'Failed to create appointment' },
       { status: 500 }
-    )
+    );
   }
 }
 
 // Helper function to convert 12-hour time to 24-hour format
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function convertTo24Hour(time12h: string): string {
-  const [time, modifier] = time12h.split(' ')
-  let [hours] = time.split(':')
-  const [, minutes] = time.split(':')
-  
+  const [time, modifier] = time12h.split(' ');
+  let [hours] = time.split(':');
+  const [, minutes] = time.split(':');
+
   if (hours === '12') {
-    hours = '00'
+    hours = '00';
   }
-  
+
   if (modifier === 'PM') {
-    hours = (parseInt(hours, 10) + 12).toString()
+    hours = (parseInt(hours, 10) + 12).toString();
   }
-  
-  return `${hours.padStart(2, '0')}:${minutes}`
+
+  return `${hours.padStart(2, '0')}:${minutes}`;
 }

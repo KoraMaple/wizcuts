@@ -1,6 +1,8 @@
 # WizCuts Barber Shop
 
-A luxury barber shop web application built with Next.js 15.4.1, NestJS, and modern web technologies. This application provides an elegant, sophisticated experience for upscale clients seeking premium grooming services.
+A luxury barber shop web application built with Next.js 15.4.1, NestJS, and modern web technologies.
+This application provides an elegant, sophisticated experience for upscale clients seeking premium
+grooming services.
 
 ## 🚀 Features
 
@@ -46,6 +48,88 @@ A luxury barber shop web application built with Next.js 15.4.1, NestJS, and mode
 - **Security Scanning**: Trivy
 
 ## 🛠️ Development Setup
+
+### Quick Start
+
+The fastest way to get started:
+
+```bash
+# Clone the repository
+git clone https://github.com/KoraMaple/wizcuts.git
+cd wizcuts
+
+# Set up environment files
+cp frontend/.env.example frontend/.env.local
+cp backend/.env.example backend/.env
+
+# Add your Clerk keys to frontend/.env.local
+# Add your database configuration to backend/.env
+
+# Start both services (recommended)
+./dev-start.sh
+
+# OR use quick start (no validation)
+./dev-quick.sh
+```
+
+### Development Scripts
+
+**Full Development Start** (`./dev-start.sh`)
+
+- ✅ Comprehensive pre-flight checks
+- ✅ Dependency installation and validation
+- ✅ TypeScript type checking
+- ✅ Port availability verification
+- ✅ Environment configuration validation
+- ✅ Sequential startup with error handling
+- ✅ Health checks and monitoring
+- ✅ Graceful shutdown and cleanup
+
+```bash
+# Start with all checks
+./dev-start.sh
+
+# Skip dependency installation
+./dev-start.sh --skip-deps
+
+# Skip type checking for faster startup
+./dev-start.sh --skip-typecheck
+
+# View recent logs
+./dev-start.sh --logs
+
+# Check service status
+./dev-start.sh --status
+
+# Stop all services
+./dev-start.sh --stop
+```
+
+**Quick Start** (`./dev-quick.sh`)
+
+- 🚀 Fast startup without validation
+- ⚡ Minimal checks for rapid development
+- 🎯 Perfect for quick testing
+
+### Manual Setup
+
+If you prefer manual control:
+
+#### Backend Setup
+
+```bash
+cd backend
+npm install
+npm run start:dev
+```
+
+#### Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ### Prerequisites
 
@@ -102,7 +186,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
    ```bash
    # Create database
    createdb wizcuts
-   
+
    # Run migrations
    npm run db:push
    ```
@@ -113,7 +197,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
    # Terminal 1 - Backend
    cd backend
    npm run start:dev
-   
+
    # Terminal 2 - Frontend
    cd frontend
    npm run dev
@@ -150,7 +234,8 @@ npm run test:e2e        # Run e2e tests
 
 ### End-to-End Testing
 
-The project uses Playwright for comprehensive E2E testing. See [E2E Testing Documentation](frontend/E2E_TESTING.md) for detailed setup and usage instructions.
+The project uses Playwright for comprehensive E2E testing. See
+[E2E Testing Documentation](frontend/E2E_TESTING.md) for detailed setup and usage instructions.
 
 ```bash
 cd frontend

@@ -15,7 +15,7 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-    }),
+    })
   );
 
   // CORS configuration for luxury barber shop frontend
@@ -32,7 +32,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('WizCuts API')
     .setDescription(
-      'Premium Barber Shop Management API - Crafting Digital Excellence',
+      'Premium Barber Shop Management API - Crafting Digital Excellence'
     )
     .setVersion('1.0')
     .addBearerAuth()
@@ -57,13 +57,13 @@ async function bootstrap() {
   console.log('✨ WizCuts API is running on:', `http://localhost:${port}`);
   console.log(
     '📚 API Documentation available at:',
-    `http://localhost:${port}/api/docs`,
+    `http://localhost:${port}/api/docs`
   );
   console.log('🎨 Environment:', env.nodeEnv);
   console.log('🏪 Ready to serve premium barber shop experiences!');
 }
 
-bootstrap().catch((error) => {
+bootstrap().catch(error => {
   console.error('❌ Failed to start application:', error);
   process.exit(1);
 });
