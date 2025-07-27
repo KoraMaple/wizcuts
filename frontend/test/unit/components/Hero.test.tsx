@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Hero from '../Hero';
+import Hero from '@/components/Hero';
 
 describe('Hero Component', () => {
   it('renders hero section', () => {

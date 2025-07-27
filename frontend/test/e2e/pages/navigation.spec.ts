@@ -26,7 +26,7 @@ test.describe('Navigation', () => {
 
         // Verify navigation occurred (URL should have changed or content updated)
         const currentUrl = page.url();
-        expect(currentUrl).toContain('localhost:3000');
+        expect(currentUrl).toContain('localhost:3001');
       }
     }
   });

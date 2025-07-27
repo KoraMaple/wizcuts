@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Header from '../Header';
+import Header from '@/components/Header';
 
 // Mock Clerk for signed-in state
 const mockUseUser = jest.fn();
@@ -11,9 +11,11 @@ jest.mock('@clerk/nextjs', () => ({
     isLoaded: true,
     signOut: jest.fn(),
   }),
-  ClerkProvider: ({ children }) => children,
-  SignInButton: ({ children }) => children || 'Sign In',
-  SignUpButton: ({ children }) => children || 'Sign Up',
+  ClerkProvider: ({ children }: { children: React.ReactNode }) => children,
+  SignInButton: ({ children }: { children?: React.ReactNode }) =>
+    children || 'Sign In',
+  SignUpButton: ({ children }: { children?: React.ReactNode }) =>
+    children || 'Sign Up',
   UserButton: () => 'User',
   RedirectToSignIn: () => null,
 }));
