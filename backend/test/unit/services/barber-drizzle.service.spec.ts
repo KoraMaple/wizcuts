@@ -85,7 +85,7 @@ describe('BarberService', () => {
 
   const mockUpdateBarberDto: UpdateBarberDto = {
     name: 'John Smith',
-    rating: 4.8,
+    rating: '4.8',
   };
 
   beforeEach(async () => {
@@ -319,7 +319,7 @@ describe('BarberService', () => {
 
     it('should handle rating conversion correctly', async () => {
       // Arrange
-      const updateDto = { rating: 4.75 };
+      const updateDto = { rating: '4.75' };
       const updatedBarber = { ...mockBarber, rating: '4.75' };
       const mockUpdateChain = {
         set: jest.fn().mockReturnThis(),

@@ -14,8 +14,8 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Configuration
-BACKEND_PORT=3001
-FRONTEND_PORT=3000
+BACKEND_PORT=3005
+FRONTEND_PORT=3001
 BACKEND_DIR="backend"
 FRONTEND_DIR="frontend"
 
@@ -85,13 +85,13 @@ check_environment() {
         exit 1
     fi
     
-    # Check backend .env
-    if [ ! -f "$BACKEND_DIR/.env" ]; then
-        print_warning "Backend .env not found"
+    # Check project root .env (backend reads from project root)
+    if [ ! -f ".env" ]; then
+        print_warning "Project root .env not found"
         if [ -f "$BACKEND_DIR/.env.example" ]; then
-            print_info "Copy $BACKEND_DIR/.env.example to $BACKEND_DIR/.env and configure your database"
+            print_info "Copy $BACKEND_DIR/.env.example to ./.env and configure your database"
         fi
-        # Don't exit for backend .env as it might not be required for basic startup
+        # Don't exit for .env as it might not be required for basic startup
     fi
     
     print_success "Environment configuration check passed"

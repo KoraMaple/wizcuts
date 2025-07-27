@@ -37,9 +37,13 @@ describe('BarberController', () => {
     email: 'john@wizcuts.com',
   };
 
-  const mockUpdateBarberDto: UpdateBarberDto = {
-    name: 'John Smith',
-    rating: 4.8,
+  const updateDto: UpdateBarberDto = {
+    name: 'Updated Michael',
+    title: 'Senior Master Barber',
+    bio: 'Updated bio',
+    experienceYears: 6,
+    rating: '4.8',
+    isActive: true,
   };
 
   const mockBarberService = {
@@ -240,14 +244,14 @@ describe('BarberController', () => {
   describe('update', () => {
     it('should update a barber successfully', async () => {
       // Arrange
-      const updatedBarber = { ...mockBarber, ...mockUpdateBarberDto };
+      const updatedBarber = { ...mockBarber, ...updateDto };
       mockBarberService.update.mockResolvedValue(updatedBarber);
 
       // Act
-      const result = await controller.update(1, mockUpdateBarberDto);
+      const result = await controller.update(1, updateDto);
 
       // Assert
-      expect(service.update).toHaveBeenCalledWith(1, mockUpdateBarberDto);
+      expect(service.update).toHaveBeenCalledWith(1, updateDto);
       expect(service.update).toHaveBeenCalledTimes(1);
       expect(result).toEqual(updatedBarber);
     });
@@ -274,10 +278,10 @@ describe('BarberController', () => {
       mockBarberService.update.mockRejectedValue(notFoundError);
 
       // Act & Assert
-      await expect(controller.update(999, mockUpdateBarberDto)).rejects.toThrow(
+      await expect(controller.update(999, updateDto)).rejects.toThrow(
         NotFoundException
       );
-      expect(service.update).toHaveBeenCalledWith(999, mockUpdateBarberDto);
+      expect(service.update).toHaveBeenCalledWith(999, updateDto);
     });
 
     it('should handle empty update data', async () => {
@@ -295,7 +299,7 @@ describe('BarberController', () => {
 
     it('should handle rating updates specifically', async () => {
       // Arrange
-      const ratingUpdate = { rating: 4.9 };
+      const ratingUpdate = { rating: '4.9' };
       const updatedBarber = { ...mockBarber, rating: '4.9' };
       mockBarberService.update.mockResolvedValue(updatedBarber);
 
@@ -313,10 +317,10 @@ describe('BarberController', () => {
       mockBarberService.update.mockRejectedValue(error);
 
       // Act & Assert
-      await expect(controller.update(1, mockUpdateBarberDto)).rejects.toThrow(
+      await expect(controller.update(1, updateDto)).rejects.toThrow(
         'Update operation failed'
       );
-      expect(service.update).toHaveBeenCalledWith(1, mockUpdateBarberDto);
+      expect(service.update).toHaveBeenCalledWith(1, updateDto);
     });
   });
 
@@ -480,7 +484,7 @@ describe('BarberController', () => {
       // Arrange
       const boundaryDto: UpdateBarberDto = {
         experienceYears: 0,
-        rating: 0.01,
+        rating: '0.01',
         reviewCount: 999999,
       };
       mockBarberService.update.mockResolvedValue(mockBarber);

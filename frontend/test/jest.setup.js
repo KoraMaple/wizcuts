@@ -1,5 +1,24 @@
 require('@testing-library/jest-dom');
 
+// Mock Clerk
+jest.mock('@clerk/nextjs', () => ({
+  useUser: () => ({
+    isSignedIn: false,
+    isLoaded: true,
+    user: null,
+  }),
+  useAuth: () => ({
+    isSignedIn: false,
+    isLoaded: true,
+    signOut: jest.fn(),
+  }),
+  ClerkProvider: ({ children }) => children,
+  SignInButton: ({ children }) => children || 'Sign In',
+  SignUpButton: ({ children }) => children || 'Sign Up',
+  UserButton: () => 'User',
+  RedirectToSignIn: () => null,
+}));
+
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter() {

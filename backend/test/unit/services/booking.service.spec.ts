@@ -110,7 +110,7 @@ describe('BookingService', () => {
     customerEmail: 'jane@example.com',
     customerPhone: '+1987654321',
     serviceName: 'Classic Cut',
-    totalPrice: 25.0,
+    totalPrice: '25.0',
     durationMinutes: 30,
     appointmentDateTime: '2024-02-15T10:00:00Z',
     notes: 'First time customer',
@@ -182,7 +182,7 @@ describe('BookingService', () => {
       expect(mockDb.insert).toHaveBeenCalledWith(bookings);
       expect(mockInsertChain.values).toHaveBeenCalledWith({
         ...mockCreateBookingDto,
-        totalPrice: '25', // Converted to string
+        totalPrice: '25.0', // Converted to string
         appointmentDateTime: new Date('2024-02-15T10:00:00Z'),
         clerkUserId: 'user_123',
         status: BookingStatus.PENDING,
@@ -260,7 +260,7 @@ describe('BookingService', () => {
       // Assert
       expect(mockInsertChain.values).toHaveBeenCalledWith({
         ...mockCreateBookingDto,
-        totalPrice: '25',
+        totalPrice: '25.0',
         appointmentDateTime: new Date('2024-02-15T10:00:00Z'),
         clerkUserId: null,
         status: BookingStatus.PENDING,
@@ -272,7 +272,7 @@ describe('BookingService', () => {
       // Arrange
       const expensiveBookingDto = {
         ...mockCreateBookingDto,
-        totalPrice: 123.45,
+        totalPrice: '123.45',
       };
       const mockBarberSelectChain = {
         from: jest.fn().mockReturnThis(),

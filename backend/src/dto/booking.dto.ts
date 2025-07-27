@@ -2,12 +2,14 @@ import {
   IsNotEmpty,
   IsString,
   IsNumber,
+  IsNumberString,
   IsOptional,
   IsDateString,
   IsEnum,
   Min,
   IsEmail,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BookingStatus, type BookingStatusType } from '../schema';
 
@@ -50,11 +52,10 @@ export class CreateBookingDto {
   @IsString()
   serviceName: string;
 
-  @ApiProperty({ description: 'Total price', example: 35.0 })
+  @ApiProperty({ description: 'Total price', example: '35.00' })
   @IsNotEmpty()
-  @IsNumber()
-  @Min(0)
-  totalPrice: number;
+  @IsNumberString()
+  totalPrice: string;
 
   @ApiProperty({ description: 'Duration in minutes', example: 45 })
   @IsNotEmpty()
@@ -102,6 +103,7 @@ export class BookingQueryDto {
     example: 1,
   })
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   barberId?: number;
 

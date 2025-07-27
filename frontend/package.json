@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "jest",
+    "test:unit": "jest --testPathPattern=test/unit",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:debug": "playwright test --debug",
@@ -54,47 +56,5 @@
     "jest-environment-jsdom": "^29.7.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
-    ],
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    },
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts",
-      "!src/**/*.stories.{js,jsx,ts,tsx}"
-    ],
-    "coverageDirectory": "coverage",
-    "coverageReporters": [
-      "text",
-      "text-lcov",
-      "html",
-      "json",
-      "lcov"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 70,
-        "functions": 70,
-        "lines": 70,
-        "statements": 70
-      }
-    },
-    "testMatch": [
-      "**/__tests__/**/*.(js|jsx|ts|tsx)",
-      "**/?(*.)(test|spec).(js|jsx|ts|tsx)"
-    ],
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": [
-        "babel-jest"
-      ]
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(.*\\.mjs$))"
-    ]
   }
 }

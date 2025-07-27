@@ -10,8 +10,8 @@ test.describe('Home Page', () => {
     await expect(page).toHaveTitle(/WizCuts/);
 
     // Verify the page loads without major errors
-    const response = await page.waitForLoadState('networkidle');
-    expect(page.url()).toBe('http://localhost:3000/');
+    await page.waitForLoadState('networkidle');
+    expect(page.url()).toBe('http://localhost:3001/');
   });
 
   test('should display main navigation elements', async ({ page }) => {
@@ -40,13 +40,15 @@ test.describe('Home Page', () => {
   });
 
   test('should handle basic accessibility requirements', async ({ page }) => {
-    // Check for basic accessibility landmarks
-    const landmarks = await page
-      .locator(
-        '[role="main"], [role="navigation"], [role="banner"], [role="contentinfo"]'
-      )
-      .count();
-    expect(landmarks).toBeGreaterThan(0);
+    // Check for basic accessibility landmarks - main, nav, footer
+    const main = await page.locator('main').count();
+    expect(main).toBeGreaterThan(0);
+
+    const nav = await page.locator('nav').count();
+    expect(nav).toBeGreaterThan(0);
+
+    const footer = await page.locator('footer').count();
+    expect(footer).toBeGreaterThan(0);
 
     // Check that the page has a proper heading structure
     const headings = await page.locator('h1, h2, h3, h4, h5, h6').count();
