@@ -33,7 +33,7 @@ export default function BookingConfirmPage() {
     return {
       service: searchParams.get('service') || 'Premium Cut & Style',
       barber: searchParams.get('barber') || 'Michael Rodriguez',
-      date: searchParams.get('date') || '2024-01-15',
+      date: searchParams.get('date') || new Date().toISOString().split('T')[0],
       time: searchParams.get('time') || '2:00 PM',
       duration: '45 minutes',
       price: '$85',
