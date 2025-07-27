@@ -58,11 +58,11 @@
   },
   "lint-staged": {
     "frontend/**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix --config frontend/eslint.config.mjs",
+      "cd frontend && npm run lint",
       "prettier --write"
     ],
     "backend/**/*.{ts,js}": [
-      "eslint --fix --config backend/eslint.config.mjs",
+      "cd backend && npm run lint",
       "prettier --write"
     ],
     "*.{json,md,yml,yaml}": [

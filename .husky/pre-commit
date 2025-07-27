@@ -12,7 +12,7 @@ npx lint-staged
 # Run our comprehensive secret scanner
 echo ""
 echo "🔍 Running secret scanner..."
-./secret-scanner.sh
+./scripts/secret-scanner.sh --staged
 
 # Run our existing security checks as backup
 echo ""
