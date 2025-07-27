@@ -73,7 +73,7 @@ export class BookingService {
       customerEmail: createBookingDto.customerEmail,
       customerPhone: createBookingDto.customerPhone,
       serviceName: createBookingDto.serviceName,
-      totalPrice: createBookingDto.totalPrice.toString(),
+      totalPrice: createBookingDto.totalPrice,
       durationMinutes: createBookingDto.durationMinutes,
       appointmentDateTime: appointmentDate,
       status: BookingStatus.PENDING,

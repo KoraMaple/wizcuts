@@ -2,6 +2,7 @@ import {
   IsNotEmpty,
   IsString,
   IsNumber,
+  IsNumberString,
   IsOptional,
   IsArray,
   IsBoolean,
@@ -123,10 +124,8 @@ export class UpdateBarberDto {
 
   @ApiPropertyOptional({ description: 'Rating', minimum: 0, maximum: 5 })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(5)
-  rating?: number;
+  @IsNumberString()
+  rating?: string;
 
   @ApiPropertyOptional({ description: 'Review count' })
   @IsOptional()
