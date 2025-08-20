@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BarberController } from '../../controllers/barber.controller';
+import { BarberController } from './interface/controllers/barber.controller';
 import { BarberService } from '../../services/barber-drizzle.service';
 import { CoreModule } from '../core/core.module';
 import { BARBERS_REPOSITORY } from './domain/barber.repository';

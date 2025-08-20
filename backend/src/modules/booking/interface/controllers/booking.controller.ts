@@ -20,24 +20,25 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { BookingService } from '../services/booking.service';
-import { ClerkAuthGuard } from '../guards/clerk-auth.guard';
-import { CurrentUser, AuthUser } from '../decorators/current-user.decorator';
+import { BookingService } from '../../../../services/booking.service';
+import { ClerkAuthGuard } from '../../../../guards/clerk-auth.guard';
 import {
-  CreateBookingDto,
-  UpdateBookingDto,
-  BookingQueryDto,
-} from '../dto/booking.dto';
-import { ListBookingsUseCase } from '../modules/booking/application/list-bookings.usecase';
-import { FindBookingByIdUseCase } from '../modules/booking/application/find-booking-by-id.usecase';
-import { ListUserBookingsUseCase } from '../modules/booking/application/list-user-bookings.usecase';
-import { CreateBookingUseCase } from '../modules/booking/application/create-booking.usecase';
-import { UpdateBookingUseCase } from '../modules/booking/application/update-booking.usecase';
-import { DeleteBookingUseCase } from '../modules/booking/application/delete-booking.usecase';
-import { ConfirmBookingUseCase } from '../modules/booking/application/confirm-booking.usecase';
-import { CancelBookingUseCase } from '../modules/booking/application/cancel-booking.usecase';
-import { BookingDto } from '../modules/booking/interface/dto/booking.dto';
-import { bookingToDto } from '../modules/booking/interface/presenters/booking.presenter';
+  CurrentUser,
+  AuthUser,
+} from '../../../../decorators/current-user.decorator';
+import { CreateBookingDto } from '../dto/create-booking.dto';
+import { UpdateBookingDto } from '../dto/update-booking.dto';
+import { BookingQueryDto } from '../dto/booking-query.dto';
+import { ListBookingsUseCase } from '../../application/list-bookings.usecase';
+import { FindBookingByIdUseCase } from '../../application/find-booking-by-id.usecase';
+import { ListUserBookingsUseCase } from '../../application/list-user-bookings.usecase';
+import { CreateBookingUseCase } from '../../application/create-booking.usecase';
+import { UpdateBookingUseCase } from '../../application/update-booking.usecase';
+import { DeleteBookingUseCase } from '../../application/delete-booking.usecase';
+import { ConfirmBookingUseCase } from '../../application/confirm-booking.usecase';
+import { CancelBookingUseCase } from '../../application/cancel-booking.usecase';
+import { BookingDto } from '../dto/booking.dto';
+import { bookingToDto } from '../presenters/booking.presenter';
 
 @ApiTags('bookings')
 @Controller('bookings')
@@ -57,14 +58,48 @@ export class BookingController {
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new booking' })
+  @ApiOperation({
+    summary: 'Create a new booking',
+    description:
+      'Creates a new booking appointment with the specified barber and service details. Requires authentication.',
+  })
   @ApiResponse({
     status: 201,
     description: 'The booking has been successfully created.',
+    type: BookingDto,
   })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })
-  @ApiResponse({ status: 409, description: 'Booking conflict.' })
-  @ApiOkResponse({ type: BookingDto })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 400 },
+        message: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['barberId must be a positive number'],
+        },
+        error: { type: 'string', example: 'Bad Request' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Authentication required',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Booking conflict - Time slot already booked',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 409 },
+        message: { type: 'string', example: 'Time slot is already booked' },
+        error: { type: 'string', example: 'Conflict' },
+      },
+    },
+  })
   async create(
     @Body() createBookingDto: CreateBookingDto
   ): Promise<BookingDto> {

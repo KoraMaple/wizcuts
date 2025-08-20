@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
+import { Toaster } from '@/components/ui/toast';
+import { ErrorBoundary } from '@/components/system/ErrorBoundary';
 
 const playfairDisplay = Playfair_Display({
   subsets: ['latin'],
@@ -78,7 +80,10 @@ export default function RootLayout({
         className={`${playfairDisplay.variable} ${inter.variable}`}
       >
         <body className="antialiased bg-luxury-navy text-luxury-cream">
-          {children}
+          <ErrorBoundary>
+            <Toaster />
+            {children}
+          </ErrorBoundary>
         </body>
       </html>
     </ClerkProvider>

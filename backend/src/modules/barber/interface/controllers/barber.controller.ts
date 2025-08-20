@@ -13,15 +13,16 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { BarberService } from '../services/barber-drizzle.service';
-import { CreateBarberDto, UpdateBarberDto } from '../dto/barber.dto';
-import { ClerkAuthGuard } from '../guards/clerk-auth.guard';
-import type { Barber } from '../schema';
-import { ListActiveBarbersUseCase } from '../modules/barber/application/list-active-barbers.usecase';
-import { FindBarbersByAvailabilityUseCase } from '../modules/barber/application/find-barbers-by-availability.usecase';
-import { FindBarberByIdUseCase } from '../modules/barber/application/find-barber-by-id.usecase';
-import { BarberDto } from '../modules/barber/interface/dto/barber.dto';
-import { toDto as barberToDto } from '../modules/barber/interface/presenters/barber.presenter';
+import { BarberService } from '../../../../services/barber-drizzle.service';
+import { CreateBarberDto } from '../dto/create-barber.dto';
+import { UpdateBarberDto } from '../dto/update-barber.dto';
+import { ClerkAuthGuard } from '../../../../guards/clerk-auth.guard';
+import type { Barber } from '../../../../schema';
+import { ListActiveBarbersUseCase } from '../../application/list-active-barbers.usecase';
+import { FindBarbersByAvailabilityUseCase } from '../../application/find-barbers-by-availability.usecase';
+import { FindBarberByIdUseCase } from '../../application/find-barber-by-id.usecase';
+import { BarberDto } from '../dto/barber.dto';
+import { toDto as barberToDto } from '../presenters/barber.presenter';
 
 @ApiTags('barbers')
 @Controller('barbers')
@@ -36,9 +37,58 @@ export class BarberController {
 
   @Post()
   @UseGuards(ClerkAuthGuard)
-  @ApiOperation({ summary: 'Create a new barber' })
-  @ApiResponse({ status: 201, description: 'Barber created successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiOperation({
+    summary: 'Create a new barber',
+    description:
+      'Creates a new barber profile with the provided information. Requires authentication.',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Barber created successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', example: 1 },
+        name: { type: 'string', example: 'Michael Rodriguez' },
+        title: { type: 'string', example: 'Master Barber' },
+        bio: {
+          type: 'string',
+          example: 'Experienced barber with 10+ years in the industry',
+        },
+        image: { type: 'string', example: '/images/barber1.jpg' },
+        isActive: { type: 'boolean', example: true },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 400 },
+        message: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['name should not be empty'],
+        },
+        error: { type: 'string', example: 'Bad Request' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Authentication required',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Unauthorized' },
+      },
+    },
+  })
   async create(@Body() createBarberDto: CreateBarberDto): Promise<Barber> {
     return this.barberService.create(createBarberDto);
   }

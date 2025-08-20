@@ -12,11 +12,9 @@ import {
   type NewBooking,
   BookingStatus,
 } from '../schema';
-import {
-  CreateBookingDto,
-  UpdateBookingDto,
-  BookingQueryDto,
-} from '../dto/booking.dto';
+import { CreateBookingDto } from '../modules/booking/interface/dto/create-booking.dto';
+import { UpdateBookingDto } from '../modules/booking/interface/dto/update-booking.dto';
+import { BookingQueryDto } from '../modules/booking/interface/dto/booking-query.dto';
 
 export type AuthUser = {
   id: string;
