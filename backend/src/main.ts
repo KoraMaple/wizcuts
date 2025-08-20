@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { env } from './config/environment';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   console.log('🚀 Starting WizCuts Barber Shop API...');
@@ -17,6 +18,9 @@ async function bootstrap() {
       transform: true,
     })
   );
+
+  // Global exception filter
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // CORS configuration for luxury barber shop frontend
   app.enableCors({
