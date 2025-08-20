@@ -9,17 +9,30 @@ import {
   Query,
   UseGuards,
   ParseIntPipe,
+  Optional,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiOkResponse } from '@nestjs/swagger';
 import { BarberService } from '../services/barber-drizzle.service';
 import { CreateBarberDto, UpdateBarberDto } from '../dto/barber.dto';
 import { ClerkAuthGuard } from '../guards/clerk-auth.guard';
 import type { Barber } from '../schema';
+import { ListActiveBarbersUseCase } from '../modules/barber/application/list-active-barbers.usecase';
+import { FindBarbersByAvailabilityUseCase } from '../modules/barber/application/find-barbers-by-availability.usecase';
+import { FindBarberByIdUseCase } from '../modules/barber/application/find-barber-by-id.usecase';
+import { BarberDto } from '../modules/barber/interface/dto/barber.dto';
+import { toDto as barberToDto } from '../modules/barber/interface/presenters/barber.presenter';
 
 @ApiTags('barbers')
 @Controller('barbers')
 export class BarberController {
-  constructor(private readonly barberService: BarberService) {}
+  constructor(
+    private readonly barberService: BarberService,
+    @Optional() private readonly listActiveBarbers?: ListActiveBarbersUseCase,
+    @Optional()
+    private readonly findBarbersByAvailability?: FindBarbersByAvailabilityUseCase,
+    @Optional() private readonly findBarberById?: FindBarberByIdUseCase
+  ) {}
 
   @Post()
   @UseGuards(ClerkAuthGuard)
@@ -33,16 +46,30 @@ export class BarberController {
   @Get()
   @ApiOperation({ summary: 'Get all active barbers' })
   @ApiResponse({ status: 200, description: 'List of all active barbers' })
-  async findAll() {
-    return await this.barberService.findAll();
+  @ApiOkResponse({ type: BarberDto, isArray: true })
+  async findAll(): Promise<BarberDto[]> {
+    if (this.listActiveBarbers) {
+      const data = await this.listActiveBarbers.execute();
+      return data.map(barberToDto);
+    }
+    // Legacy path: return raw service result; Nest will serialize Dates to ISO strings for HTTP
+    // Cast to any to satisfy the method signature in unit tests that call it directly
+    return (await this.barberService.findAll()) as unknown as BarberDto[];
   }
 
   @Get('available')
   @ApiOperation({ summary: 'Get barbers available on a specific date' })
   @ApiResponse({ status: 200, description: 'List of available barbers' })
-  async findAvailable(@Query('date') date: string) {
+  @ApiOkResponse({ type: BarberDto, isArray: true })
+  async findAvailable(@Query('date') date: string): Promise<BarberDto[]> {
     const queryDate = new Date(date);
-    return await this.barberService.findByAvailability(queryDate);
+    if (this.findBarbersByAvailability) {
+      const data = await this.findBarbersByAvailability.execute(queryDate);
+      return data.map(barberToDto);
+    }
+    return (await this.barberService.findByAvailability(
+      queryDate
+    )) as unknown as BarberDto[];
   }
 
   @Get(':id')
@@ -50,8 +77,16 @@ export class BarberController {
   @ApiParam({ name: 'id', description: 'Barber ID' })
   @ApiResponse({ status: 200, description: 'Barber details' })
   @ApiResponse({ status: 404, description: 'Barber not found' })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.barberService.findOne(id);
+  @ApiOkResponse({ type: BarberDto })
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<BarberDto> {
+    if (this.findBarberById) {
+      const item = await this.findBarberById.execute(id);
+      return barberToDto(item);
+    }
+    // Legacy path: return raw service result (possibly null)
+    const item = await this.barberService.findOne(id);
+    // When called via HTTP, Nest serializes Dates; when called directly in unit tests, return as-is
+    return item as unknown as BarberDto;
   }
 
   @Get(':id/details')

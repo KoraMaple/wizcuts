@@ -1,10 +1,13 @@
-export interface ServiceItem {
+export interface ServiceEntity {
   id: number;
   name: string;
-  description?: string;
+  description: string;
+  // Domain models money as integer cents
   priceCents: number;
   durationMinutes: number;
-  active: boolean;
+  category: string;
+  isActive: boolean;
+  image?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

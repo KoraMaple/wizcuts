@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { env } from './config/environment';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   console.log('🚀 Starting WizCuts Barber Shop API...');
@@ -21,6 +22,16 @@ async function bootstrap() {
 
   // Global exception filter
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Global logging interceptor (dev-friendly)
+  app.useGlobalInterceptors(new LoggingInterceptor());
+
+  // Global API prefix and versioning (/api + /v1)
+  app.setGlobalPrefix('api');
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
 
   // CORS configuration for luxury barber shop frontend
   app.enableCors({
@@ -45,7 +56,12 @@ async function bootstrap() {
     .addTag('services', 'Premium grooming services')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  // Enable deep route scanning and explicitly include the root AppModule
+  // so versioned controllers across feature modules are captured
+  const document = SwaggerModule.createDocument(app, config, {
+    deepScanRoutes: true,
+    include: [AppModule],
+  });
   SwaggerModule.setup('api/docs', app, document, {
     customSiteTitle: 'WizCuts API Documentation',
     customfavIcon: '/favicon.ico',
@@ -53,6 +69,13 @@ async function bootstrap() {
       .swagger-ui .topbar { background-color: #1e293b; }
       .swagger-ui .topbar .download-url-wrapper { display: none; }
     `,
+  });
+
+  // Explicitly expose the OpenAPI JSON at /api-json (stable regardless of prefixes/versioning)
+  const httpAdapter = app.getHttpAdapter();
+  // AbstractHttpAdapter has .get(path, handler)
+  httpAdapter.get('/api-json', (req: any, res: any) => {
+    res.json(document);
   });
 
   const port = env.port;

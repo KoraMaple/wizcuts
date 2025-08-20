@@ -14,10 +14,13 @@ export class ApiClient {
   private defaultHeaders: Record<string, string>;
 
   constructor(opts: ApiClientOptions = {}) {
-    this.baseUrl =
+    const root =
       opts.baseUrl ??
       process.env.NEXT_PUBLIC_API_URL ??
-      'http://localhost:3001';
+      'http://localhost:3005';
+    const normalizedRoot = root.endsWith('/') ? root.slice(0, -1) : root;
+    // Backend uses globalPrefix 'api' and URI versioning 'v1'
+    this.baseUrl = `${normalizedRoot}/api/v1`;
     this.defaultHeaders = {
       'Content-Type': 'application/json',
       ...(opts.headers ?? {}),

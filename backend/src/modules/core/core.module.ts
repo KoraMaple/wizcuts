@@ -14,14 +14,10 @@ import {
     SupabaseConfigService,
     {
       provide: StorageService,
-      useFactory: (supabaseConfig: SupabaseConfigService) => {
-        if (env.storageProvider === 'supabase') {
-          return new SupabaseStorageService(supabaseConfig);
-        } else {
-          return new LocalStorageService();
-        }
-      },
-      inject: [SupabaseConfigService],
+      useClass:
+        env.storageProvider === 'supabase'
+          ? SupabaseStorageService
+          : LocalStorageService,
     },
   ],
   exports: [RealtimeService, SupabaseConfigService, StorageService],
