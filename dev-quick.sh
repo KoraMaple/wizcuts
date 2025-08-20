@@ -21,8 +21,8 @@ cd ..
 
 echo ""
 echo "✅ Services starting up!"
-echo "Frontend: http://localhost:3000"
-echo "Backend:  http://localhost:3001"
+echo "Frontend: http://localhost:3001"
+echo "Backend:  http://localhost:3005"
 echo ""
 echo "Press Ctrl+C to stop both services"
 

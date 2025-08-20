@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { TestHelpers } from '../utils/test-helpers';
-import testData from '../fixtures/test-data';
+import { TestHelpers } from './utils/test-helpers';
+import testData from './fixtures/test-data';
 
 test.describe('Performance and Accessibility', () => {
   let helpers: TestHelpers;
@@ -101,14 +101,8 @@ test.describe('Performance and Accessibility', () => {
     const consoleErrors: string[] = [];
 
     page.on('console', msg => {
-      if (
-        msg.type() === 'error' &&
-        !msg.text().includes('favicon') &&
-        !msg.text().includes('Failed to load resource') &&
-        !msg.text().includes('404') &&
-        !msg.text().includes('upstream image response failed')
-      ) {
-        // Ignore favicon errors, image loading errors as they're common in development
+      if (msg.type() === 'error' && !msg.text().includes('favicon')) {
+        // Ignore favicon errors as they're common in development
         consoleErrors.push(msg.text());
       }
     });

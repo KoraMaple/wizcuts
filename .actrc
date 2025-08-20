@@ -1,0 +1,5 @@
+# GitHub Actions local testing configuration
+--platform ubuntu-latest=node:20-bullseye-slim
+--container-architecture linux/arm64
+--env-file .env.github
+--container-options "--memory=4g --cpus=2"

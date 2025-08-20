@@ -19,12 +19,13 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { BookingService } from '../services/booking.service';
+import { ClerkAuthGuard } from '../guards/clerk-auth.guard';
+import { CurrentUser, AuthUser } from '../decorators/current-user.decorator';
 import {
   CreateBookingDto,
   UpdateBookingDto,
   BookingQueryDto,
 } from '../dto/booking.dto';
-import { ClerkAuthGuard } from '../guards/clerk-auth.guard';
 
 @ApiTags('bookings')
 @Controller('bookings')
@@ -61,6 +62,16 @@ export class BookingController {
   @ApiQuery({ name: 'endDate', required: false, type: String })
   async findAll(@Query() query: BookingQueryDto) {
     return this.bookingService.findAll(query);
+  }
+
+  @Get('user/appointments')
+  @ApiOperation({ summary: 'Get current user appointments' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all appointments for the authenticated user.',
+  })
+  async getUserAppointments(@CurrentUser() user: AuthUser) {
+    return this.bookingService.findUserBookings(user.id);
   }
 
   @Get(':id')
@@ -123,9 +134,10 @@ export class BookingController {
     description: 'The booking has been cancelled.',
   })
   @ApiResponse({ status: 404, description: 'Booking not found.' })
-  async cancel(@Param('id', ParseIntPipe) id: number) {
-    // Note: In real implementation, we'd get user from auth context
-    // For now, we'll need to modify the service or handle this differently
-    return this.bookingService.cancel(id, 'user-id-placeholder');
+  async cancel(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthUser
+  ) {
+    return this.bookingService.cancel(id, user.id);
   }
 }
