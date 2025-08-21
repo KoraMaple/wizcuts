@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './test/e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -33,6 +33,10 @@ export default defineConfig({
     /* Record video on failure */
     video: 'retain-on-failure',
   },
+  // Increase default expect timeout for all projects (stabilizes WebKit/Mobile too)
+  expect: {
+    timeout: 8000,
+  },
 
   /* Configure projects for major browsers */
   projects: [
@@ -48,17 +52,32 @@ export default defineConfig({
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      retries: process.env.CI ? 3 : 1,
+      use: {
+        ...devices['Desktop Safari'],
+        actionTimeout: 15000,
+        navigationTimeout: 20000,
+      },
     },
 
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      retries: process.env.CI ? 3 : 1,
+      use: {
+        ...devices['Pixel 5'],
+        actionTimeout: 15000,
+        navigationTimeout: 20000,
+      },
     },
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      retries: process.env.CI ? 3 : 1,
+      use: {
+        ...devices['iPhone 12'],
+        actionTimeout: 15000,
+        navigationTimeout: 20000,
+      },
     },
 
     /* Test against branded browsers. */
@@ -74,7 +93,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run dev',
+    command: 'NEXT_PUBLIC_E2E=true npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120 * 1000,

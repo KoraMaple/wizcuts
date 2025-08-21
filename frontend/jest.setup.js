@@ -107,3 +107,12 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+// Mock Clerk to avoid network and auth dependencies in unit tests
+jest.mock('@clerk/nextjs', () => {
+  return {
+    useUser: () => ({ isLoaded: true, isSignedIn: false, user: null }),
+    UserButton: ({ children }) => children || null,
+    SignInButton: ({ children }) => children || null,
+  };
+});

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import {
@@ -39,19 +39,35 @@ export default function AppointmentsPage() {
   const { getToken, isSignedIn } = useAuth();
   const router = useRouter();
 
-  // Redirect if not signed in
+  // Redirect if not signed in (allow E2E to control via window.__CLERK_AUTH_STATE)
   useEffect(() => {
-    if (!isSignedIn) {
+    const e2eSignedIn =
+      typeof window !== 'undefined' &&
+      (window as any).__CLERK_AUTH_STATE?.isSignedIn === true;
+    if (!isSignedIn && !e2eSignedIn) {
       router.push('/sign-in?redirect_url=/appointments');
     }
   }, [isSignedIn, router]);
 
+  // Resolve backend base URL (fallback to relative for E2E)
+  const apiBase = (process.env.NEXT_PUBLIC_BACKEND_URL || '').replace(
+    /\/$/,
+    ''
+  );
+
   // Fetch user appointments
-  const fetchAppointments = async () => {
+  const fetchAppointments = useCallback(async () => {
     try {
-      const token = await getToken();
+      let token = await getToken();
+      // Fallback for E2E where tests inject window.__CLERK_AUTH_STATE.getToken
+      if (!token && typeof window !== 'undefined') {
+        const maybeGetToken = (window as any).__CLERK_AUTH_STATE?.getToken;
+        if (typeof maybeGetToken === 'function') {
+          token = await maybeGetToken();
+        }
+      }
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/user/appointments`,
+        `${apiBase}/bookings/user/appointments`.replace(/^\//, '/'),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -71,13 +87,16 @@ export default function AppointmentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [getToken]);
 
   useEffect(() => {
-    if (isSignedIn) {
+    const e2eSignedIn =
+      typeof window !== 'undefined' &&
+      (window as any).__CLERK_AUTH_STATE?.isSignedIn === true;
+    if (isSignedIn || e2eSignedIn) {
       fetchAppointments();
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, fetchAppointments]);
 
   // Cancel appointment
   const cancelAppointment = async (appointmentId: number) => {
@@ -85,7 +104,7 @@ export default function AppointmentsPage() {
     try {
       const token = await getToken();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/${appointmentId}/cancel`,
+        `${apiBase}/bookings/${appointmentId}/cancel`.replace(/^\//, '/'),
         {
           method: 'POST',
           headers: {

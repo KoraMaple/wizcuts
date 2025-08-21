@@ -81,8 +81,7 @@ export default function RootLayout({
       >
         <body className="antialiased bg-luxury-navy text-luxury-cream">
           <ErrorBoundary>
-            <Toaster />
-            {children}
+            <Toaster>{children}</Toaster>
           </ErrorBoundary>
         </body>
       </html>

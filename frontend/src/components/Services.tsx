@@ -2,6 +2,13 @@
 
 import { motion } from 'framer-motion';
 import { Scissors, Zap, Palette, Crown, Clock, Shield } from 'lucide-react';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui';
 
 const services = [
   {
@@ -67,7 +74,7 @@ export default function Services() {
           <h2 className="text-4xl sm:text-5xl font-display font-bold text-white mb-6">
             Our Services
           </h2>
-          <p className="text-xl text-slate-300 leading-relaxed">
+          <p className="text-xl text-[var(--color-gray-300)] leading-relaxed">
             Discover our range of premium grooming services, each designed to
             elevate your personal style and confidence.
           </p>
@@ -83,62 +90,58 @@ export default function Services() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
-              className="group relative bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8 hover:border-slate-600/50 transition-all duration-300"
+              className="group relative"
             >
               {/* Background Gradient */}
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`}
               ></div>
 
-              <div className="relative z-10">
-                {/* Icon */}
-                <div
-                  className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}
-                >
-                  <service.icon className="h-8 w-8 text-white" />
-                </div>
-
-                {/* Content */}
-                <div className="mb-6">
+              <Card className="relative z-10">
+                <CardHeader className="pb-0">
+                  <div
+                    className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <service.icon className="h-8 w-8 text-white" />
+                  </div>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-display font-bold text-white group-hover:text-amber-400 transition-colors duration-300">
+                    <CardTitle className="text-2xl font-display text-white group-hover:text-amber-400 transition-colors duration-300">
                       {service.title}
-                    </h3>
+                    </CardTitle>
                     <span className="text-xl font-semibold text-amber-400">
                       {service.price}
                     </span>
                   </div>
-                  <p className="text-slate-300 text-lg leading-relaxed mb-6">
+                </CardHeader>
+                <CardContent>
+                  <p className="text-[var(--color-gray-300)] text-lg leading-relaxed mb-6">
                     {service.description}
                   </p>
-                </div>
-
-                {/* Features */}
-                <div className="space-y-3">
-                  {service.features.map(feature => (
-                    <div key={feature} className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-                      <span className="text-slate-300 font-medium">
-                        {feature}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* CTA Button */}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="mt-8 w-full bg-slate-700/50 hover:bg-slate-600/50 text-white py-3 rounded-full font-semibold transition-all duration-300 border border-slate-600/50 hover:border-amber-400/50"
-                  onClick={() => {
-                    document
-                      .querySelector('#booking')
-                      ?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Book This Service
-                </motion.button>
-              </div>
+                  <div className="space-y-3">
+                    {service.features.map(feature => (
+                      <div
+                        key={feature}
+                        className="flex items-center space-x-3"
+                      >
+                        <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
+                        <span className="text-[var(--color-gray-300)] font-medium">
+                          {feature}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <Button
+                    className="mt-8 w-full"
+                    onClick={() => {
+                      document
+                        .querySelector('#booking')
+                        ?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Book This Service
+                  </Button>
+                </CardContent>
+              </Card>
             </motion.div>
           ))}
         </div>
@@ -149,33 +152,40 @@ export default function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8"
         >
-          <h3 className="text-2xl font-display font-bold text-white mb-8 text-center">
-            Why Choose WizCuts?
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {benefits.map((benefit, index) => (
-              <motion.div
-                key={benefit.title}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="flex items-center space-x-4"
-              >
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center">
-                  <benefit.icon className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">
-                    {benefit.title}
-                  </h4>
-                  <p className="text-slate-300">{benefit.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl font-display text-white text-center">
+                Why Choose WizCuts?
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {benefits.map((benefit, index) => (
+                  <motion.div
+                    key={benefit.title}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.2 }}
+                    className="flex items-center space-x-4"
+                  >
+                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center">
+                      <benefit.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-semibold text-white mb-2">
+                        {benefit.title}
+                      </h4>
+                      <p className="text-[var(--color-gray-300)]">
+                        {benefit.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
       </div>
     </section>

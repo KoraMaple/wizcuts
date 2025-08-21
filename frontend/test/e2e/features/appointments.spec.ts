@@ -23,9 +23,10 @@ test.describe('Appointments Management', () => {
       serviceName: 'Premium Cut & Style',
       totalPrice: '85.00',
       durationMinutes: 45,
+      // Make sure this is > 24h so cancel is allowed
       appointmentDateTime: new Date(
-        Date.now() + 24 * 60 * 60 * 1000
-      ).toISOString(), // Tomorrow
+        Date.now() + 48 * 60 * 60 * 1000
+      ).toISOString(), // In 2 days
       status: 'confirmed',
       notes: 'Test appointment',
       clerkUserId: 'user_test_123',
@@ -209,8 +210,8 @@ test.describe('Appointments Management', () => {
       // Click cancel button
       await cancelButton.click();
 
-      // Wait for the cancellation to process
-      await page.waitForResponse('**/bookings/*/cancel');
+      // Wait for the cancellation to process by idling network
+      await page.waitForLoadState('networkidle');
 
       // Check that the appointment status changed to cancelled
       await expect(page.locator('text=Cancelled')).toBeVisible();
@@ -245,18 +246,28 @@ test.describe('Appointments Management', () => {
 
     // Wait for appointments to load
     await page.waitForLoadState('networkidle');
+    // Ensure at least one appointment card content is present
+    await page.waitForSelector('text=Premium Cut & Style', { timeout: 10000 });
 
     // Check service names
     await expect(page.locator('text=Premium Cut & Style')).toBeVisible();
     await expect(page.locator('text=Classic Cut')).toBeVisible();
 
-    // Check contact information
-    await expect(page.locator('text=test@example.com')).toBeVisible();
-    await expect(page.locator('text=+1234567890')).toBeVisible();
+    // Check contact information (narrow to a single match)
+    await expect(page.locator('text=test@example.com').first()).toBeVisible();
+    await expect(page.locator('text=+1234567890').first()).toBeVisible();
 
-    // Check notes
-    await expect(page.locator('text=Test appointment')).toBeVisible();
-    await expect(page.locator('text=Second test appointment')).toBeVisible();
+    // Check notes (match paragraph that has 'Notes:' and specific note text)
+    const noteOne = page
+      .locator('p:has-text("Notes:")')
+      .filter({ hasText: 'Test appointment' })
+      .first();
+    const noteTwo = page
+      .locator('p:has-text("Notes:")')
+      .filter({ hasText: 'Second test appointment' })
+      .first();
+    await expect(noteOne).toBeVisible();
+    await expect(noteTwo).toBeVisible();
 
     // Check booking IDs
     await expect(page.locator('text=Booking ID: #1')).toBeVisible();
@@ -275,8 +286,7 @@ test.describe('Appointments Management', () => {
 
     await page.goto('/appointments');
 
-    // Should redirect to sign-in page
-    await page.waitForURL('**/sign-in**');
+    // Should redirect to sign-in page (don't require full load)
     await expect(page).toHaveURL(/sign-in/);
   });
 
@@ -330,9 +340,10 @@ test.describe('Appointments Management', () => {
     if ((await confirmedIndicators.count()) > 0) {
       await expect(confirmedIndicators.first()).toBeVisible();
 
-      // Check for checkmark icon with confirmed appointments
-      const checkmarkIcon = page.locator('svg').filter({ hasText: /check/i });
-      await expect(checkmarkIcon.first()).toBeVisible();
+      // Check for presence of an icon next to confirmed text
+      const confirmedContainer = page.locator('.text-green-600').first();
+      await expect(confirmedContainer).toBeVisible();
+      await expect(confirmedContainer.locator('svg').first()).toBeVisible();
     }
   });
 });

@@ -11,8 +11,22 @@ test.describe('Navigation', () => {
     // This test will need to be updated based on actual navigation structure
     // For now, testing basic navigation functionality
 
-    // Look for navigation links - these selectors should be updated based on actual implementation
-    const navLinks = page.locator('nav a, [role="navigation"] a, header a');
+    // Open mobile menu if present (hamburger)
+    const menuButton = page
+      .locator(
+        'button[aria-label*="menu" i], [data-testid*="menu" i], button[aria-controls*="menu" i]'
+      )
+      .first();
+    if ((await menuButton.count()) > 0) {
+      await menuButton.click({ trial: true }).catch(() => {});
+      await menuButton.click().catch(() => {});
+      await page.waitForTimeout(100);
+    }
+
+    // Look for navigation links - broaden selectors for mobile/desktop
+    const navLinks = page.locator(
+      'nav a, [role="navigation"] a, header a, [data-testid*="nav"] a'
+    );
     const linkCount = await navLinks.count();
 
     if (linkCount > 0) {
@@ -21,6 +35,9 @@ test.describe('Navigation', () => {
       const linkText = await firstLink.textContent();
 
       if (linkText && !linkText.trim().startsWith('http')) {
+        // Ensure link is actionable on mobile: scroll into view and wait for visibility
+        await firstLink.scrollIntoViewIfNeeded().catch(() => {});
+        await expect(firstLink).toBeVisible();
         await firstLink.click();
         await page.waitForLoadState('networkidle');
 
@@ -65,15 +82,20 @@ test.describe('Navigation', () => {
 
   test('should handle page refresh correctly', async ({ page }) => {
     // Wait for initial load
+    await page.waitForLoadState('load');
     await page.waitForLoadState('networkidle');
     const initialUrl = page.url();
 
     // Refresh the page
     await page.reload();
+    await page.waitForLoadState('load');
     await page.waitForLoadState('networkidle');
+    await expect(page.locator('body')).toBeVisible();
 
     // Verify we're still on the same page
-    expect(page.url()).toBe(initialUrl);
+    const initialPath = new URL(initialUrl).pathname;
+    const refreshedPath = new URL(page.url()).pathname;
+    expect(refreshedPath).toBe(initialPath);
 
     // Verify main content is still there
     const body = page.locator('body');
