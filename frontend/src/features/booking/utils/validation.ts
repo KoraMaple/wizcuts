@@ -1,4 +1,4 @@
-export const E164_PHONE_REGEX = /^\+?[1-9]\d{7,14}$/;
+export const E164_PHONE_REGEX = /^\+[1-9]\d{7,14}$/;
 export const PRICE_REGEX = /^\d+(?:\.\d{1,2})?$/;
 
 export interface ValidationError {

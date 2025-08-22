@@ -55,6 +55,12 @@ export const api = {
       body: JSON.stringify(body ?? {}),
       ...(init || {}),
     }),
+  patch: <T>(path: string, body?: unknown, init?: RequestInit) =>
+    jsonFetch<T>(buildUrl(path), {
+      method: 'PATCH',
+      body: JSON.stringify(body ?? {}),
+      ...(init || {}),
+    }),
   del: <T>(path: string, init?: RequestInit) =>
     jsonFetch<T>(buildUrl(path), { method: 'DELETE', ...(init || {}) }),
 };

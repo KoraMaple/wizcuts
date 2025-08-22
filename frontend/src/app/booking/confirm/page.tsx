@@ -33,6 +33,8 @@ export default function BookingConfirmPage() {
   const [bookingId, setBookingId] = useState<number | null>(null);
   const booking = useBookingStore((s: BookingState) => s.draft);
   const clearDraft = useBookingStore((s: BookingState) => s.clearDraft);
+  // Wait for persisted store to hydrate before making redirect decisions
+  const hasHydrated = useBookingStore.persist.hasHydrated();
   const [phone, setPhone] = useState('');
   const phoneErr = validatePhone(phone);
   const isDraftValid = booking
@@ -91,7 +93,7 @@ export default function BookingConfirmPage() {
         totalPrice: String(booking.price).replace(/[^0-9.]/g, ''),
       });
       setBookingId(result?.id ?? null);
-      clearDraft();
+      // Do not clear draft yet; keep it until user acknowledges so data remains visible
       setIsConfirmed(true);
     } catch (error) {
       console.error('Error confirming appointment:', error);
@@ -118,12 +120,24 @@ export default function BookingConfirmPage() {
     }
   };
 
-  // If no draft, redirect user back to booking page
+  // If no draft, redirect user back to booking page (only after hydration and not on success screen)
   useEffect(() => {
-    if (!booking && isLoaded && isSignedIn) {
+    if (hasHydrated && !isConfirmed && !booking && isLoaded && isSignedIn) {
       router.replace('/booking');
     }
-  }, [booking, isLoaded, isSignedIn, router]);
+  }, [hasHydrated, isConfirmed, booking, isLoaded, isSignedIn, router]);
+
+  // While store is hydrating, show a lightweight loading state to avoid flicker/redirect
+  if (!hasHydrated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
+          <p className="text-slate-300">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isConfirmed) {
     return (
@@ -144,10 +158,13 @@ export default function BookingConfirmPage() {
               </p>
             )}
             <button
-              onClick={() => router.push('/')}
+              onClick={() => {
+                clearDraft();
+                router.push('/bookings');
+              }}
               className="w-full bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 font-semibold py-3 px-6 rounded-full transition-all duration-200 hover:scale-[1.02] shadow-lg"
             >
-              Return Home
+              View My Bookings
             </button>
           </div>
         </div>

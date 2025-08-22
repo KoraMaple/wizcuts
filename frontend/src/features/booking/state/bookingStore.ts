@@ -32,9 +32,12 @@ const creator = (set: SetState<BookingState>) => ({
   clearDraft: () => set({ draft: null }),
 });
 
-const persistOptions: PersistOptions<BookingState> = {
+const persistOptions: PersistOptions<
+  BookingState,
+  { draft: BookingDraft | null }
+> = {
   name: 'wizcuts.booking.pending',
-  storage: createJSONStorage<BookingState>(() => sessionStorage),
+  storage: createJSONStorage(() => sessionStorage),
   version: 1,
   partialize: (state: BookingState) => ({ draft: state.draft }),
 };
