@@ -7,6 +7,7 @@ import {
   IsDateString,
   Min,
   IsEmail,
+  Matches,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -39,6 +40,9 @@ export class CreateBookingDto {
   })
   @IsNotEmpty()
   @IsString()
+  @Matches(/^\+?[1-9]\d{7,14}$/, {
+    message: 'customerPhone must be a valid E.164 phone number',
+  })
   customerPhone: string;
 
   @ApiProperty({
@@ -51,7 +55,9 @@ export class CreateBookingDto {
 
   @ApiProperty({ description: 'Total price', example: '35.00' })
   @IsNotEmpty()
-  @IsNumberString()
+  @Matches(/^\d+(?:\.\d{1,2})?$/, {
+    message: 'totalPrice must be a valid amount with up to 2 decimal places',
+  })
   totalPrice: string;
 
   @ApiProperty({ description: 'Duration in minutes', example: 45 })

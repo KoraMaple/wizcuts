@@ -13,11 +13,34 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Configuration
+# Configuration (defaults; may be overridden by detected values)
 BACKEND_PORT=3005
-FRONTEND_PORT=3001
+FRONTEND_PORT=3000
 BACKEND_DIR="backend"
 FRONTEND_DIR="frontend"
+
+# Attempt to auto-detect ports from project configuration
+load_ports() {
+    # Backend: read PORT from project root .env if present
+    if [ -f ".env" ]; then
+        local env_port
+        env_port=$(grep -E "^PORT=" .env | tail -n 1 | cut -d'=' -f2 | tr -d '"' | tr -d "'" )
+        if [[ "$env_port" =~ ^[0-9]+$ ]]; then
+            BACKEND_PORT=$env_port
+            print_info "Detected backend port from .env: $BACKEND_PORT"
+        fi
+    fi
+
+    # Frontend: parse -p <port> from frontend/package.json dev script
+    if [ -f "$FRONTEND_DIR/package.json" ]; then
+        local fe_port
+        fe_port=$(grep -E '"dev"\s*:\s*"[^"]* -p [0-9]+' "$FRONTEND_DIR/package.json" | sed -E 's/.* -p ([0-9]+).*/\1/' | tr -d '[:space:]')
+        if [[ "$fe_port" =~ ^[0-9]+$ ]]; then
+            FRONTEND_PORT=$fe_port
+            print_info "Detected frontend port from package.json: $FRONTEND_PORT"
+        fi
+    fi
+}
 
 # Function to print colored output
 print_status() {
@@ -91,7 +114,19 @@ check_environment() {
         if [ -f "$BACKEND_DIR/.env.example" ]; then
             print_info "Copy $BACKEND_DIR/.env.example to ./.env and configure your database"
         fi
-        # Don't exit for .env as it might not be required for basic startup
+    else
+        # Validate required keys exist
+        local required_keys=(DATABASE_URL SUPABASE_URL SUPABASE_ANON_KEY CLERK_SECRET_KEY PORT)
+        local missing=()
+        for key in "${required_keys[@]}"; do
+            if ! grep -E "^${key}=" .env >/dev/null; then
+                missing+=("$key")
+            fi
+        done
+        if [ ${#missing[@]} -gt 0 ]; then
+            print_error "Missing required keys in .env: ${missing[*]}"
+            exit 1
+        fi
     fi
     
     print_success "Environment configuration check passed"
@@ -165,7 +200,8 @@ start_backend() {
     # Wait for backend to be ready
     print_info "Waiting for backend to start..."
     for i in {1..30}; do
-        if curl -s http://localhost:$BACKEND_PORT/health > /dev/null 2>&1; then
+        # Health endpoint uses global prefix 'api' and version 'v1'
+        if curl -s http://localhost:$BACKEND_PORT/api/v1/health > /dev/null 2>&1; then
             print_success "Backend is running on http://localhost:$BACKEND_PORT"
             return 0
         fi
@@ -180,6 +216,8 @@ start_backend() {
     fi
     
     print_error "Backend failed to start properly"
+    print_info "Last 50 lines of backend.log:"
+    tail -n 50 backend.log 2>/dev/null || true
     return 1
 }
 
@@ -277,6 +315,8 @@ main() {
     # Parse command line arguments
     SKIP_DEPS=false
     SKIP_TYPECHECK=false
+    SKIP_BACKEND=false
+    SKIP_FRONTEND=false
     
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -300,12 +340,22 @@ main() {
                 cleanup
                 exit 0
                 ;;
+            --skip-backend)
+                SKIP_BACKEND=true
+                shift
+                ;;
+            --skip-frontend)
+                SKIP_FRONTEND=true
+                shift
+                ;;
             -h|--help)
                 echo "Usage: $0 [OPTIONS]"
                 echo ""
                 echo "Options:"
                 echo "  --skip-deps        Skip dependency installation"
                 echo "  --skip-typecheck   Skip TypeScript type checking"
+                echo "  --skip-backend     Do not start backend"
+                echo "  --skip-frontend    Do not start frontend"
                 echo "  --logs             Show recent logs and exit"
                 echo "  --status           Show service status and exit"
                 echo "  --stop             Stop all services and exit"
@@ -325,10 +375,15 @@ main() {
     # Pre-flight checks
     check_dependencies
     check_environment
+    load_ports
     
     # Check ports
-    check_port $BACKEND_PORT "backend" || exit 1
-    check_port $FRONTEND_PORT "frontend" || exit 1
+    if [ "$SKIP_BACKEND" = false ]; then
+        check_port $BACKEND_PORT "backend" || exit 1
+    fi
+    if [ "$SKIP_FRONTEND" = false ]; then
+        check_port $FRONTEND_PORT "frontend" || exit 1
+    fi
     
     # Install dependencies if not skipped
     if [ "$SKIP_DEPS" = false ]; then
@@ -345,8 +400,22 @@ main() {
     fi
     
     # Start services
-    if start_backend; then
-        if start_frontend; then
+    local ok=true
+    if [ "$SKIP_BACKEND" = false ]; then
+        start_backend || ok=false
+    else
+        print_info "Skipping backend start (--skip-backend)"
+    fi
+
+    if [ "$SKIP_FRONTEND" = false ]; then
+        if [ "$ok" = true ]; then
+            start_frontend || ok=false
+        fi
+    else
+        print_info "Skipping frontend start (--skip-frontend)"
+    fi
+
+    if [ "$ok" = true ]; then
             echo ""
             print_success "🎉 WizCuts development environment is ready!"
             echo ""
@@ -363,12 +432,8 @@ main() {
             while true; do
                 sleep 1
             done
-        else
-            print_error "Failed to start frontend"
-            exit 1
-        fi
     else
-        print_error "Failed to start backend"
+        print_error "Failed to start one or more services"
         exit 1
     fi
 }

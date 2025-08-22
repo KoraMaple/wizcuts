@@ -5,6 +5,7 @@ export function bookingToDto(b: Booking): BookingDto {
   return {
     id: b.id,
     barberId: b.barberId,
+    barberName: (b as any).barberName,
     customerName: b.customerName,
     customerEmail: b.customerEmail,
     customerPhone: (b as any).customerPhone,

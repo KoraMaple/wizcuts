@@ -8,7 +8,7 @@
     "backend"
   ],
   "scripts": {
-    "dev": "./dev-start.sh",
+    "dev": "./dev-start.sh --skip-deps",
     "dev:quick": "./dev-quick.sh",
     "dev:logs": "./dev-start.sh --logs",
     "dev:status": "./dev-start.sh --status",

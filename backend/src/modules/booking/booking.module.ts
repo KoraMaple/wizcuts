@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BookingController } from './interface/controllers/booking.controller';
+import { AvailabilityController } from 'src/modules/booking/interface/controllers/availability.controller';
 import { BookingService } from '../../services/booking.service';
 import { CoreModule } from '../core/core.module';
 import { BOOKINGS_REPOSITORY } from './domain/booking.repository';
@@ -19,7 +20,7 @@ import { CancelBookingUseCase } from './application/cancel-booking.usecase';
  */
 @Module({
   imports: [CoreModule],
-  controllers: [BookingController],
+  controllers: [BookingController, AvailabilityController],
   providers: [
     BookingService,
     { provide: BOOKINGS_REPOSITORY, useClass: BookingServiceAdapter },

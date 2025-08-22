@@ -101,27 +101,11 @@ export class BookingController {
     },
   })
   async create(
-    @Body() createBookingDto: CreateBookingDto
+    @Body() createBookingDto: CreateBookingDto,
+    @CurrentUser() user: AuthUser
   ): Promise<BookingDto> {
-    if (this.createBooking) {
-      const input: any = {
-        customerName: createBookingDto.customerName,
-        customerEmail: createBookingDto.customerEmail,
-        serviceId: (createBookingDto as any).serviceId,
-        barberId: createBookingDto.barberId,
-        startTime: new Date(createBookingDto.appointmentDateTime),
-        endTime: new Date(
-          new Date(createBookingDto.appointmentDateTime).getTime() +
-            createBookingDto.durationMinutes * 60000
-        ),
-        notes: createBookingDto.notes,
-      };
-      const booking = await this.createBooking.execute(input);
-      return bookingToDto(booking);
-    }
-    return (await this.bookingService.create(
-      createBookingDto
-    )) as unknown as BookingDto;
+    const created = await this.bookingService.create(createBookingDto, user);
+    return bookingToDto(created as any);
   }
 
   @Get()
@@ -144,9 +128,8 @@ export class BookingController {
       const data = await this.listBookings.execute(query as any);
       return data.map(bookingToDto);
     }
-    return (await this.bookingService.findAll(
-      query
-    )) as unknown as BookingDto[];
+    const raw = await this.bookingService.findAll(query);
+    return (raw as any[]).map(bookingToDto);
   }
 
   @Get('user/appointments')
@@ -163,9 +146,8 @@ export class BookingController {
       const data = await this.listUserBookings.execute(user.id);
       return data.map(bookingToDto);
     }
-    return (await this.bookingService.findUserBookings(
-      user.id
-    )) as unknown as BookingDto[];
+    const raw = await this.bookingService.findUserBookings(user.id);
+    return (raw as any[]).map(bookingToDto);
   }
 
   @Get(':id')
@@ -183,7 +165,7 @@ export class BookingController {
       return bookingToDto(item);
     }
     const item = await this.bookingService.findOne(id);
-    return item as unknown as BookingDto;
+    return bookingToDto(item as any);
   }
 
   @Patch(':id')

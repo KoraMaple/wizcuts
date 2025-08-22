@@ -7,6 +7,9 @@ export class BookingDto {
   @ApiProperty()
   barberId: number;
 
+  @ApiProperty({ required: false })
+  barberName?: string;
+
   @ApiProperty()
   customerName: string;
 
