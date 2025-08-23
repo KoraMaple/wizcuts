@@ -54,4 +54,8 @@ export function getDatabase() {
 }
 
 // Default database instance (for backward compatibility)
-export const db = getDatabase();
+// Allow tooling (e.g., OpenAPI export) to skip DB init
+const SKIP_DB_INIT = process.env.SKIP_DB_INIT === 'true';
+export const db = SKIP_DB_INIT
+  ? (undefined as unknown as ReturnType<typeof drizzle>)
+  : getDatabase();

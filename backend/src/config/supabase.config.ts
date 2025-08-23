@@ -7,6 +7,14 @@ export class SupabaseConfigService {
   private readonly supabaseClient: SupabaseClient;
 
   constructor(private readonly configService: ConfigService) {
+    if (process.env.SKIP_EXTERNAL_CLIENTS === 'true') {
+      // Bypass real client initialization during tooling (e.g., OpenAPI export)
+      // Methods that use the client won't be called in this context.
+      // @ts-expect-error - intentionally assigning a dummy object
+      this.supabaseClient = {};
+      return;
+    }
+
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
     const supabaseKey = this.configService.get<string>('SUPABASE_ANON_KEY');
 
@@ -28,6 +36,9 @@ export class SupabaseConfigService {
 
   // Service role client for admin operations
   getServiceRoleClient(): SupabaseClient {
+    if (process.env.SKIP_EXTERNAL_CLIENTS === 'true') {
+      throw new Error('Service role client is disabled in tooling mode');
+    }
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
     const serviceRoleKey = this.configService.get<string>(
       'SUPABASE_SERVICE_ROLE_KEY'

@@ -1,6 +1,7 @@
 .env
 frontend/.env.local
 backend/.env.local
+.env.github
 # ===================================
 # SECURITY: Additional Protection Patterns
 # ===================================
@@ -54,3 +55,4 @@ coverage/
 **/coverage/
 *.log
 *.tsbuildinfo
+*.pid

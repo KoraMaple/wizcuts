@@ -8,7 +8,8 @@ import {
   type Barber,
   type NewBarber,
 } from '../schema';
-import { CreateBarberDto, UpdateBarberDto } from '../dto/barber.dto';
+import { CreateBarberDto } from '../modules/barber/interface/dto/create-barber.dto';
+import { UpdateBarberDto } from '../modules/barber/interface/dto/update-barber.dto';
 import { RealtimeService } from './realtime.service';
 import { StorageService } from './storage.service';
 

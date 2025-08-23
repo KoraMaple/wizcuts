@@ -4,6 +4,14 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, Star, X, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui';
+import { useToast } from '@/components/ui/toast';
 
 const services = [
   {
@@ -116,6 +124,7 @@ const barbers = [
 ];
 
 export default function Booking() {
+  const { show } = useToast();
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedBarber, setSelectedBarber] = useState<string | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -139,10 +148,11 @@ export default function Booking() {
   const handleBooking = () => {
     const service = services.find(s => s.id === selectedService);
     const barber = barbers.find(b => b.id === selectedBarber);
-
-    alert(
-      `Booking confirmed!\n\nService: ${service?.name}\nBarber: ${barber?.name}\nDate: ${selectedDate}\nTime: ${selectedTime}`
-    );
+    show({
+      variant: 'success',
+      title: 'Booking confirmed!',
+      description: `Service: ${service?.name} • Barber: ${barber?.name} • ${selectedDate} at ${selectedTime}`,
+    });
 
     // Reset state
     setSelectedService(null);
@@ -188,7 +198,7 @@ export default function Booking() {
                     currentStep === step ||
                     index <
                       ['service', 'barber', 'calendar'].indexOf(currentStep)
-                      ? 'bg-amber-400 text-slate-900'
+                      ? 'bg-amber-400 text-[var(--color-gray-900)]'
                       : 'bg-background-secondary border border-border text-foreground-muted'
                   }`}
                 >
@@ -221,33 +231,40 @@ export default function Booking() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {services.map(service => (
-                <motion.button
+                <motion.div
                   key={service.id}
-                  onClick={() => handleServiceSelect(service.id)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`text-left p-6 rounded-2xl border-2 transition-all duration-300 ${
-                    selectedService === service.id
-                      ? 'border-amber-400 bg-amber-400/10'
-                      : 'border-border bg-background-secondary/50 hover:border-amber-400/50'
-                  }`}
+                  onClick={() => handleServiceSelect(service.id)}
                 >
-                  <div className="flex justify-between items-start mb-3">
-                    <h4 className="text-xl font-semibold text-foreground">
-                      {service.name}
-                    </h4>
-                    <span className="text-2xl font-bold text-amber-400">
-                      ${service.price}
-                    </span>
-                  </div>
-                  <p className="text-foreground-secondary mb-3">
-                    {service.description}
-                  </p>
-                  <div className="flex items-center text-sm text-foreground-muted">
-                    <Clock className="h-4 w-4 mr-1" />
-                    {service.duration} minutes
-                  </div>
-                </motion.button>
+                  <Card
+                    className={`cursor-pointer transition-all duration-300 ${
+                      selectedService === service.id
+                        ? 'border-amber-400 bg-amber-400/10'
+                        : 'hover:border-amber-400/50'
+                    }`}
+                  >
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-xl text-foreground">
+                          {service.name}
+                        </CardTitle>
+                        <span className="text-2xl font-bold text-amber-400">
+                          ${service.price}
+                        </span>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-foreground-secondary mb-3">
+                        {service.description}
+                      </p>
+                      <div className="flex items-center text-sm text-foreground-muted">
+                        <Clock className="h-4 w-4 mr-1" />
+                        {service.duration} minutes
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -264,61 +281,70 @@ export default function Booking() {
               <h3 className="text-2xl font-display font-bold text-foreground">
                 Choose Your Barber
               </h3>
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => setCurrentStep('service')}
-                className="text-foreground-secondary hover:text-foreground transition-colors"
+                className="text-foreground-secondary hover:text-foreground"
               >
                 ← Back to Services
-              </button>
+              </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {barbers.map(barber => (
-                <motion.button
+                <motion.div
                   key={barber.id}
-                  onClick={() => handleBarberSelect(barber.id)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`text-left p-6 rounded-2xl border-2 transition-all duration-300 ${
-                    selectedBarber === barber.id
-                      ? 'border-amber-400 bg-amber-400/10'
-                      : 'border-border bg-background-secondary/50 hover:border-amber-400/50'
-                  }`}
+                  onClick={() => handleBarberSelect(barber.id)}
+                  className="cursor-pointer"
                 >
-                  <div className="aspect-square mb-4 relative rounded-xl overflow-hidden">
-                    <Image
-                      src={barber.image}
-                      alt={barber.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <h4 className="text-lg font-semibold text-foreground mb-1">
-                    {barber.name}
-                  </h4>
-                  <p className="text-sm text-amber-400 mb-2">{barber.title}</p>
-                  <p className="text-xs text-foreground-muted mb-3">
-                    {barber.experience}
-                  </p>
-                  <div className="flex items-center mb-3">
-                    <Star className="h-4 w-4 text-amber-400 fill-current mr-1" />
-                    <span className="text-sm font-medium text-foreground">
-                      {barber.rating}
-                    </span>
-                    <span className="text-xs text-foreground-muted ml-1">
-                      ({barber.reviews})
-                    </span>
-                  </div>
-                  <div className="space-y-1">
-                    {barber.specialties.slice(0, 2).map(specialty => (
-                      <span
-                        key={specialty}
-                        className="inline-block text-xs bg-background-secondary px-2 py-1 rounded text-foreground-muted"
-                      >
-                        {specialty}
-                      </span>
-                    ))}
-                  </div>
-                </motion.button>
+                  <Card
+                    className={`transition-all duration-300 ${
+                      selectedBarber === barber.id
+                        ? 'border-amber-400 bg-amber-400/10'
+                        : 'hover:border-amber-400/50'
+                    }`}
+                  >
+                    <CardContent className="p-6">
+                      <div className="aspect-square mb-4 relative rounded-xl overflow-hidden">
+                        <Image
+                          src={barber.image}
+                          alt={barber.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <h4 className="text-lg font-semibold text-foreground mb-1">
+                        {barber.name}
+                      </h4>
+                      <p className="text-sm text-amber-400 mb-2">
+                        {barber.title}
+                      </p>
+                      <p className="text-xs text-foreground-muted mb-3">
+                        {barber.experience}
+                      </p>
+                      <div className="flex items-center mb-3">
+                        <Star className="h-4 w-4 text-amber-400 fill-current mr-1" />
+                        <span className="text-sm font-medium text-foreground">
+                          {barber.rating}
+                        </span>
+                        <span className="text-xs text-foreground-muted ml-1">
+                          ({barber.reviews})
+                        </span>
+                      </div>
+                      <div className="space-y-1">
+                        {barber.specialties.slice(0, 2).map(specialty => (
+                          <span
+                            key={specialty}
+                            className="inline-block text-xs bg-background-secondary px-2 py-1 rounded text-foreground-muted"
+                          >
+                            {specialty}
+                          </span>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -353,13 +379,15 @@ export default function Booking() {
                       {services.find(s => s.id === selectedService)?.price}
                     </p>
                   </div>
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setShowCalendar(false)}
                     className="text-foreground-muted hover:text-foreground"
                     aria-label="Close calendar"
                   >
                     <X className="h-6 w-6" />
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -371,10 +399,11 @@ export default function Booking() {
                     <div className="space-y-2">
                       {Object.keys(selectedBarberData.availability).map(
                         date => (
-                          <button
+                          <Button
                             key={date}
                             onClick={() => setSelectedDate(date)}
-                            className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                            variant="ghost"
+                            className={`w-full justify-start text-left p-3 rounded-lg border transition-colors ${
                               selectedDate === date
                                 ? 'border-amber-400 bg-amber-400/10 text-foreground'
                                 : 'border-border bg-background-secondary/50 text-foreground-secondary hover:border-amber-400/50'
@@ -385,7 +414,7 @@ export default function Booking() {
                               month: 'long',
                               day: 'numeric',
                             })}
-                          </button>
+                          </Button>
                         )
                       )}
                     </div>
@@ -399,9 +428,10 @@ export default function Booking() {
                     {selectedDate && (
                       <div className="grid grid-cols-2 gap-2">
                         {availableSlots.map((time: string) => (
-                          <button
+                          <Button
                             key={time}
                             onClick={() => setSelectedTime(time)}
+                            variant="ghost"
                             className={`p-3 text-center rounded-lg border transition-colors ${
                               selectedTime === time
                                 ? 'border-amber-400 bg-amber-400/10 text-foreground'
@@ -409,7 +439,7 @@ export default function Booking() {
                             }`}
                           >
                             {time}
-                          </button>
+                          </Button>
                         ))}
                       </div>
                     )}
@@ -438,12 +468,9 @@ export default function Booking() {
                         {services.find(s => s.id === selectedService)?.price}
                       </p>
                     </div>
-                    <button
-                      onClick={handleBooking}
-                      className="w-full mt-4 bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 py-3 rounded-lg font-semibold hover:shadow-lg transition-shadow"
-                    >
+                    <Button onClick={handleBooking} className="w-full mt-4">
                       Confirm Booking
-                    </button>
+                    </Button>
                   </motion.div>
                 )}
               </motion.div>

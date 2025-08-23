@@ -73,7 +73,10 @@ test.describe('Booking System', () => {
 
   test('should display service information', async ({ page }) => {
     // Look for service-related content
-    const pageText = await page.textContent('body');
+    await page.waitForLoadState('networkidle');
+    const body = page.locator('body');
+    await expect(body).toBeVisible();
+    const pageText = await body.textContent();
 
     // Check for common barber shop services
     const hasServiceContent =

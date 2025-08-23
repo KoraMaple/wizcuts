@@ -124,6 +124,12 @@ export default function Header({ className }: HeaderProps) {
                     >
                       Book Now
                     </motion.button>
+                    <button
+                      className="text-slate-200 hover:text-amber-400 transition-colors font-medium"
+                      onClick={() => router.push('/bookings')}
+                    >
+                      My Bookings
+                    </button>
                     <UserButton
                       appearance={{
                         elements: {
@@ -135,7 +141,7 @@ export default function Header({ className }: HeaderProps) {
                             'text-slate-200 hover:bg-slate-700 hover:text-amber-400 transition-colors',
                           userButtonPopoverActionButtonText: 'text-slate-200',
                           userButtonPopoverActionButtonIcon: 'text-slate-400',
-                          userButtonPopoverFooter: 'hidden', // Hide the footer
+                          userButtonPopoverFooter: 'hidden',
                         },
                       }}
                       userProfileMode="navigation"
@@ -232,20 +238,31 @@ export default function Header({ className }: HeaderProps) {
                           Book Your Appointment
                         </button>
                         <div className="flex items-center justify-center pt-2">
-                          <UserButton
-                            appearance={{
-                              elements: {
-                                avatarBox:
-                                  'w-10 h-10 rounded-full border-2 border-amber-400/50',
-                                userButtonPopoverCard:
-                                  'bg-slate-800 border border-slate-600',
-                                userButtonPopoverActionButton:
-                                  'text-slate-200 hover:bg-slate-700 hover:text-amber-400',
-                              },
+                          <button
+                            className="w-full bg-slate-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-slate-600 transition-colors"
+                            onClick={() => {
+                              setIsOpen(false);
+                              router.push('/bookings');
                             }}
-                            userProfileMode="navigation"
-                            userProfileUrl="/profile"
-                          />
+                          >
+                            My Bookings
+                          </button>
+                          <div className="flex items-center justify-center pt-2">
+                            <UserButton
+                              appearance={{
+                                elements: {
+                                  avatarBox:
+                                    'w-10 h-10 rounded-full border-2 border-amber-400/50',
+                                  userButtonPopoverCard:
+                                    'bg-slate-800 border border-slate-600',
+                                  userButtonPopoverActionButton:
+                                    'text-slate-200 hover:bg-slate-700 hover:text-amber-400',
+                                },
+                              }}
+                              userProfileMode="navigation"
+                              userProfileUrl="/profile"
+                            />
+                          </div>
                         </div>
                       </>
                     ) : (

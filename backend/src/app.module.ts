@@ -2,17 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BarberController } from './controllers/barber.controller';
-import { BarberService } from './services/barber-drizzle.service';
-import { BookingService } from './services/booking.service';
-import {
-  StorageService,
-  SupabaseStorageService,
-  LocalStorageService,
-} from './services/storage.service';
-import { RealtimeService } from './services/realtime.service';
-import { SupabaseConfigService } from './config/supabase.config';
-import { env } from './config/environment';
+import { HealthModule } from './modules/health/health.module';
+import { BarberModule } from './modules/barber/barber.module';
+import { BookingModule } from './modules/booking/booking.module';
+import { CoreModule } from './modules/core/core.module';
+import { ServicesModule } from './modules/services/services.module';
 
 @Module({
   imports: [
@@ -20,25 +14,13 @@ import { env } from './config/environment';
       isGlobal: true,
       envFilePath: '../../.env',
     }),
+    CoreModule,
+    HealthModule,
+    BarberModule,
+    BookingModule,
+    ServicesModule,
   ],
-  controllers: [AppController, BarberController],
-  providers: [
-    AppService,
-    BarberService,
-    BookingService,
-    RealtimeService,
-    SupabaseConfigService,
-    {
-      provide: StorageService,
-      useFactory: (supabaseConfig: SupabaseConfigService) => {
-        if (env.storageProvider === 'supabase') {
-          return new SupabaseStorageService(supabaseConfig);
-        } else {
-          return new LocalStorageService();
-        }
-      },
-      inject: [SupabaseConfigService],
-    },
-  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -12,11 +12,9 @@ import {
   type NewBooking,
   BookingStatus,
 } from '../schema';
-import {
-  CreateBookingDto,
-  UpdateBookingDto,
-  BookingQueryDto,
-} from '../dto/booking.dto';
+import { CreateBookingDto } from '../modules/booking/interface/dto/create-booking.dto';
+import { UpdateBookingDto } from '../modules/booking/interface/dto/update-booking.dto';
+import { BookingQueryDto } from '../modules/booking/interface/dto/booking-query.dto';
 import { RealtimeService } from './realtime.service';
 
 export type AuthUser = {
@@ -155,11 +153,31 @@ export class BookingService {
   }
 
   async findUserBookings(clerkUserId: string): Promise<Booking[]> {
-    return await db
-      .select()
+    // Include barber name for richer client display
+    const rows = await db
+      .select({
+        id: bookings.id,
+        barberId: bookings.barberId,
+        customerName: bookings.customerName,
+        customerEmail: bookings.customerEmail,
+        customerPhone: bookings.customerPhone,
+        serviceName: bookings.serviceName,
+        totalPrice: bookings.totalPrice,
+        durationMinutes: bookings.durationMinutes,
+        appointmentDateTime: bookings.appointmentDateTime,
+        status: bookings.status,
+        notes: bookings.notes,
+        clerkUserId: bookings.clerkUserId,
+        createdAt: bookings.createdAt,
+        updatedAt: bookings.updatedAt,
+        barberName: barbers.name,
+      })
       .from(bookings)
+      .leftJoin(barbers, eq(barbers.id, bookings.barberId))
       .where(eq(bookings.clerkUserId, clerkUserId))
       .orderBy(bookings.appointmentDateTime);
+
+    return rows as unknown as Booking[];
   }
 
   async update(

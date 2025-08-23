@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import { Button, Card, CardContent } from '@/components/ui';
 
 // Sample gallery images (in a real app, these would come from your backend)
 const galleryImages = [
@@ -99,7 +100,7 @@ export default function Gallery() {
   };
 
   return (
-    <section id="gallery" className="py-20 bg-slate-900/30">
+    <section id="gallery" className="py-20 bg-[var(--color-gray-900)]/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -112,7 +113,7 @@ export default function Gallery() {
           <h2 className="text-4xl sm:text-5xl font-display font-bold text-white mb-6">
             Our Gallery
           </h2>
-          <p className="text-xl text-slate-300 leading-relaxed">
+          <p className="text-xl text-[var(--color-gray-300)] leading-relaxed">
             Discover the artistry and craftsmanship that defines WizCuts. Every
             cut tells a story of precision and style.
           </p>
@@ -127,17 +128,18 @@ export default function Gallery() {
           className="flex flex-wrap justify-center gap-4 mb-12"
         >
           {categories.map(category => (
-            <button
+            <Button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+              variant={selectedCategory === category.id ? 'default' : 'outline'}
+              className={`px-6 py-3 rounded-full ${
                 selectedCategory === category.id
-                  ? 'bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900'
-                  : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-slate-700/50'
+                  ? ''
+                  : 'text-[var(--color-gray-300)] border-[var(--color-gray-700)]/50 hover:bg-[var(--color-gray-700)]/50'
               }`}
             >
               {category.name}
-            </button>
+            </Button>
           ))}
         </motion.div>
 
@@ -156,24 +158,28 @@ export default function Gallery() {
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 whileHover={{ scale: 1.05 }}
-                className="group relative overflow-hidden rounded-2xl bg-slate-800/30 cursor-pointer"
+                className="group cursor-pointer"
                 onClick={() => setSelectedImage(image.id)}
               >
-                <div className="aspect-square relative">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="text-white font-semibold text-lg">
-                      {image.alt}
-                    </h3>
-                  </div>
-                </div>
+                <Card className="overflow-hidden border-0 shadow-none bg-transparent">
+                  <CardContent className="p-0">
+                    <div className="aspect-square relative">
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-gray-900)]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <h3 className="text-white font-semibold text-lg">
+                          {image.alt}
+                        </h3>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -193,33 +199,39 @@ export default function Gallery() {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
-                className="relative max-w-4xl max-h-[90vh] bg-slate-800 rounded-2xl overflow-hidden"
+                className="relative max-w-4xl max-h-[90vh] bg-[var(--color-gray-800)] rounded-2xl overflow-hidden"
                 onClick={e => e.stopPropagation()}
               >
                 {/* Close Button */}
-                <button
+                <Button
                   onClick={() => setSelectedImage(null)}
-                  className="absolute top-4 right-4 z-10 w-10 h-10 bg-slate-900/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-slate-800 transition-colors"
+                  className="absolute top-4 right-4 z-10 rounded-full text-white"
                   aria-label="Close gallery"
+                  variant="ghost"
+                  size="icon"
                 >
                   <X className="h-5 w-5" />
-                </button>
+                </Button>
 
                 {/* Navigation Buttons */}
-                <button
+                <Button
                   onClick={prevImage}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-slate-900/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-slate-800 transition-colors"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 rounded-full text-white"
                   aria-label="Previous image"
+                  variant="ghost"
+                  size="icon"
                 >
                   <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={nextImage}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 bg-slate-900/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-slate-800 transition-colors"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 rounded-full text-white"
                   aria-label="Next image"
+                  variant="ghost"
+                  size="icon"
                 >
                   <ChevronRight className="h-5 w-5" />
-                </button>
+                </Button>
 
                 {/* Image */}
                 <div className="relative max-h-[70vh]">
@@ -233,11 +245,11 @@ export default function Gallery() {
                 </div>
 
                 {/* Image Info */}
-                <div className="p-6 bg-slate-800">
+                <div className="p-6 bg-[var(--color-gray-800)]">
                   <h3 className="text-xl font-semibold text-white mb-2">
                     {selectedImageData.alt}
                   </h3>
-                  <p className="text-slate-300 capitalize">
+                  <p className="text-[var(--color-gray-300)] capitalize">
                     {selectedImageData.category}
                   </p>
                 </div>

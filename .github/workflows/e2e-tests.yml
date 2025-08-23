@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+env:
+  HUSKY: 0
+
 jobs:
   e2e-tests:
     timeout-minutes: 60

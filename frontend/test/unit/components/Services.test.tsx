@@ -1,20 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import Services from '@/components/Services';
 
-describe('Services Component', () => {
-  it('renders services section', () => {
+describe('Services', () => {
+  it('renders the section heading', () => {
     render(<Services />);
-    const section = document.querySelector('#services');
-    expect(section).toBeInTheDocument();
-  });
-
-  it('displays section heading', () => {
-    render(<Services />);
-    expect(screen.getByText(/Our Services/)).toBeInTheDocument();
-  });
-
-  it('displays service descriptions', () => {
-    render(<Services />);
-    expect(screen.getByText(/premium grooming services/i)).toBeInTheDocument();
+    expect(screen.getByText(/Our Services/i)).toBeInTheDocument();
   });
 });

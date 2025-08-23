@@ -305,6 +305,66 @@ describe('BookingController', () => {
     });
   });
 
+  describe('getUserAppointments', () => {
+    const mockUser = {
+      id: 'user_123',
+      email: 'john@example.com',
+      firstName: 'John',
+      lastName: 'Doe',
+    };
+
+    const mockUserBookings = [
+      {
+        ...mockBooking,
+        clerkUserId: 'user_123',
+      },
+      {
+        ...mockBooking,
+        id: 2,
+        serviceName: 'Beard Trim',
+        totalPrice: '15.00',
+        clerkUserId: 'user_123',
+      },
+    ];
+
+    it('should return user appointments', async () => {
+      // Arrange
+      mockBookingService.findUserBookings.mockResolvedValue(mockUserBookings);
+
+      // Act
+      const result = await controller.getUserAppointments(mockUser);
+
+      // Assert
+      expect(service.findUserBookings).toHaveBeenCalledWith('user_123');
+      expect(service.findUserBookings).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(mockUserBookings);
+    });
+
+    it('should return empty array for user with no appointments', async () => {
+      // Arrange
+      mockBookingService.findUserBookings.mockResolvedValue([]);
+
+      // Act
+      const result = await controller.getUserAppointments(mockUser);
+
+      // Assert
+      expect(service.findUserBookings).toHaveBeenCalledWith('user_123');
+      expect(result).toEqual([]);
+    });
+
+    it('should handle service errors', async () => {
+      // Arrange
+      const serviceError = new Error('Database connection failed');
+      mockBookingService.findUserBookings.mockRejectedValue(serviceError);
+
+      // Act & Assert
+      await expect(controller.getUserAppointments(mockUser)).rejects.toThrow(
+        'Database connection failed'
+      );
+      expect(service.findUserBookings).toHaveBeenCalledWith('user_123');
+    });
+  });
+
   describe('update', () => {
     it('should update a booking successfully', async () => {
       // Arrange
@@ -459,6 +519,121 @@ describe('BookingController', () => {
         'Cannot delete confirmed booking within 24 hours'
       );
       expect(service.remove).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('cancel', () => {
+    const mockUser = {
+      id: 'user_123',
+      email: 'john@example.com',
+      firstName: 'John',
+      lastName: 'Doe',
+    };
+
+    it('should cancel a booking successfully', async () => {
+      // Arrange
+      const cancelledBooking = { ...mockBooking, status: 'cancelled' };
+      mockBookingService.cancel.mockResolvedValue(cancelledBooking);
+
+      // Act
+      const result = await controller.cancel(1, mockUser);
+
+      // Assert
+      expect(service.cancel).toHaveBeenCalledWith(1, 'user_123');
+      expect(service.cancel).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(cancelledBooking);
+    });
+
+    it('should handle unauthorized cancellation', async () => {
+      // Arrange
+      const unauthorizedError = new Error(
+        'You can only cancel your own bookings'
+      );
+      mockBookingService.cancel.mockRejectedValue(unauthorizedError);
+
+      // Act & Assert
+      await expect(controller.cancel(1, mockUser)).rejects.toThrow(
+        'You can only cancel your own bookings'
+      );
+      expect(service.cancel).toHaveBeenCalledWith(1, 'user_123');
+    });
+
+    it('should handle already cancelled booking', async () => {
+      // Arrange
+      const alreadyCancelledError = new Error('Booking is already cancelled');
+      mockBookingService.cancel.mockRejectedValue(alreadyCancelledError);
+
+      // Act & Assert
+      await expect(controller.cancel(1, mockUser)).rejects.toThrow(
+        'Booking is already cancelled'
+      );
+      expect(service.cancel).toHaveBeenCalledWith(1, 'user_123');
+    });
+
+    it('should handle NotFoundException during cancellation', async () => {
+      // Arrange
+      const notFoundError = new NotFoundException(
+        'Booking with ID 999 not found'
+      );
+      mockBookingService.cancel.mockRejectedValue(notFoundError);
+
+      // Act & Assert
+      await expect(controller.cancel(999, mockUser)).rejects.toThrow(
+        NotFoundException
+      );
+      expect(service.cancel).toHaveBeenCalledWith(999, 'user_123');
+    });
+  });
+
+  describe('confirm', () => {
+    it('should confirm a booking successfully', async () => {
+      // Arrange
+      const confirmedBooking = { ...mockBooking, status: 'confirmed' };
+      mockBookingService.confirm.mockResolvedValue(confirmedBooking);
+
+      // Act
+      const result = await controller.confirm(1);
+
+      // Assert
+      expect(service.confirm).toHaveBeenCalledWith(1);
+      expect(service.confirm).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(confirmedBooking);
+    });
+
+    it('should handle NotFoundException during confirmation', async () => {
+      // Arrange
+      const notFoundError = new NotFoundException(
+        'Booking with ID 999 not found'
+      );
+      mockBookingService.confirm.mockRejectedValue(notFoundError);
+
+      // Act & Assert
+      await expect(controller.confirm(999)).rejects.toThrow(NotFoundException);
+      expect(service.confirm).toHaveBeenCalledWith(999);
+    });
+
+    it('should handle already confirmed booking', async () => {
+      // Arrange
+      const alreadyConfirmedError = new Error('Booking is already confirmed');
+      mockBookingService.confirm.mockRejectedValue(alreadyConfirmedError);
+
+      // Act & Assert
+      await expect(controller.confirm(1)).rejects.toThrow(
+        'Booking is already confirmed'
+      );
+      expect(service.confirm).toHaveBeenCalledWith(1);
+    });
+
+    it('should handle service errors during confirmation', async () => {
+      // Arrange
+      const error = new Error('Confirmation failed');
+      mockBookingService.confirm.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(controller.confirm(1)).rejects.toThrow(
+        'Confirmation failed'
+      );
+      expect(service.confirm).toHaveBeenCalledWith(1);
     });
   });
 

@@ -85,6 +85,10 @@ test/
 
 ## Component Structure
 
+- Organize components by feature or domain
+- Keep related files together (e.g., component, styles, tests)
+- Do not create unnecessary empty files
+
 ### Frontend Components
 
 - Create modular, reusable components
