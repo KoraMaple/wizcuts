@@ -20,9 +20,9 @@ export default function BookingsPage() {
     useRescheduleBooking(getToken);
 
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [newStart, setNewStart] = useState<string>(''); // ISO value
   const [newDate, setNewDate] = useState<string>(''); // YYYY-MM-DD
   const [newTime, setNewTime] = useState<string>(''); // HH:MM
+  const [selectingTime, setSelectingTime] = useState<boolean>(false);
 
   const items = useMemo(() => {
     return (data ?? []).map(b => {
@@ -187,33 +187,12 @@ export default function BookingsPage() {
                           className="px-3 py-1.5 rounded-lg border border-amber-400/50 text-amber-300 hover:bg-amber-400/10 disabled:opacity-50"
                           disabled={rescheduling}
                           onClick={() => {
-                            setEditingId(editingId === b.id ? null : b.id);
-                            // Prefill current date/time for better UX
-                            if (b.startTime) {
-                              const d = new Date(b.startTime);
-                              const y = d.getFullYear();
-                              const m = String(d.getMonth() + 1).padStart(
-                                2,
-                                '0'
-                              );
-                              const day = String(d.getDate()).padStart(2, '0');
-                              const hh = String(d.getHours()).padStart(2, '0');
-                              const mm = String(d.getMinutes()).padStart(
-                                2,
-                                '0'
-                              );
-                              setNewDate(`${y}-${m}-${day}`);
-                              setNewTime(`${hh}:${mm}`);
-                              setNewStart(
-                                new Date(
-                                  `${y}-${m}-${day}T${hh}:${mm}:00`
-                                ).toISOString()
-                              );
-                            } else {
-                              setNewDate('');
-                              setNewTime('');
-                              setNewStart('');
-                            }
+                            const next = editingId === b.id ? null : b.id;
+                            setEditingId(next);
+                            // New flow: start from calendar step; clear previous selections
+                            setNewDate('');
+                            setNewTime('');
+                            setSelectingTime(false);
                           }}
                         >
                           {editingId === b.id ? 'Close' : 'Reschedule'}
@@ -222,9 +201,9 @@ export default function BookingsPage() {
                     )}
 
                     {editingId === b.id && (
-                      <div className="mt-2 p-3 rounded-lg border border-slate-700 bg-slate-900/70">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:items-start">
-                          <div className="min-w-0 w-full md:max-w-[320px] relative z-10">
+                      <div className="mt-2 p-3 rounded-lg border border-slate-700 bg-slate-900/70 relative overflow-visible isolate">
+                        {!selectingTime && (
+                          <div className="w-full max-w-[360px]">
                             <label className="block text-sm text-slate-300 mb-2">
                               Select Date
                             </label>
@@ -232,23 +211,48 @@ export default function BookingsPage() {
                               value={newDate}
                               onChange={date => {
                                 setNewDate(date);
-                                // Keep last selected time if present
-                                if (date && newTime) {
-                                  const iso = new Date(
-                                    `${date}T${newTime}:00`
-                                  ).toISOString();
-                                  setNewStart(iso);
+                                // advance to time selection when a date is picked
+                                if (date) {
+                                  setSelectingTime(true);
                                 }
                               }}
                             />
+                            <div className="flex justify-end gap-2 mt-4">
+                              <button
+                                className="px-3 py-1.5 rounded-lg border border-slate-600 text-slate-200 hover:bg-slate-700/50"
+                                onClick={() => setEditingId(null)}
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                className="px-3 py-1.5 rounded-lg border border-amber-400/50 text-amber-300 hover:bg-amber-400/10 disabled:opacity-50"
+                                disabled={!newDate}
+                                onClick={() => setSelectingTime(true)}
+                              >
+                                Next
+                              </button>
+                            </div>
                           </div>
-                          <div className="min-w-0 w-full md:max-w-[240px] relative z-0">
-                            <label className="block text-sm text-slate-300 mb-2">
-                              Select Time
-                            </label>
-                            <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto pr-1">
+                        )}
+
+                        {selectingTime && (
+                          <div className="min-w-0 w-full md:max-w-[340px]">
+                            <div className="flex items-center justify-between mb-2">
+                              <label className="block text-sm text-slate-300">
+                                Select Time
+                              </label>
+                              <button
+                                className="text-xs underline text-slate-300 hover:text-slate-100 ml-3"
+                                onClick={() => {
+                                  setSelectingTime(false);
+                                  setNewTime('');
+                                }}
+                              >
+                                Back to Date
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto pr-1 scrollbar-luxury">
                               {Array.from({ length: 20 }).map((_, idx) => {
-                                // 09:00 to 18:30 in 30-minute steps (20 slots)
                                 const baseMinutes = 9 * 60; // 540
                                 const minutes = baseMinutes + idx * 30;
                                 const hh = String(
@@ -264,53 +268,49 @@ export default function BookingsPage() {
                                   <button
                                     key={label}
                                     type="button"
-                                    className={`p-2 rounded-lg border transition-all duration-200 text-center ${
+                                    className={[
+                                      'p-2 rounded-lg border transition-all duration-200 text-center',
                                       selected
                                         ? 'border-amber-400 bg-amber-400/10 text-amber-300'
-                                        : 'border-slate-700 bg-slate-800/40 text-slate-300 hover:border-slate-500'
-                                    }`}
-                                    onClick={() => {
-                                      setNewTime(label);
-                                      if (newDate) {
-                                        const iso = new Date(
-                                          `${newDate}T${label}:00`
-                                        ).toISOString();
-                                        setNewStart(iso);
-                                      }
-                                    }}
+                                        : 'border-slate-700 bg-slate-800/40 text-slate-300 hover:border-slate-500',
+                                    ].join(' ')}
+                                    onClick={() => setNewTime(label)}
                                   >
                                     {label}
                                   </button>
                                 );
                               })}
                             </div>
+                            <div className="flex justify-end gap-2 mt-4">
+                              <button
+                                className="px-3 py-1.5 rounded-lg border border-slate-600 text-slate-200 hover:bg-slate-700/50"
+                                onClick={() => setEditingId(null)}
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                className="px-3 py-1.5 rounded-lg border border-amber-400/50 text-amber-300 hover:bg-amber-400/10 disabled:opacity-50"
+                                disabled={rescheduling || !newDate || !newTime}
+                                onClick={async () => {
+                                  if (!newDate || !newTime) return;
+                                  const iso = new Date(
+                                    `${newDate}T${newTime}:00`
+                                  ).toISOString();
+                                  await rescheduleBooking({
+                                    id: b.id,
+                                    startTime: iso,
+                                  });
+                                  setEditingId(null);
+                                  setSelectingTime(false);
+                                  setNewDate('');
+                                  setNewTime('');
+                                }}
+                              >
+                                {rescheduling ? 'Saving…' : 'Save'}
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex justify-end gap-2 mt-4">
-                          <button
-                            className="px-3 py-1.5 rounded-lg border border-slate-600 text-slate-200 hover:bg-slate-700/50"
-                            onClick={() => setEditingId(null)}
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            className="px-3 py-1.5 rounded-lg border border-amber-400/50 text-amber-300 hover:bg-amber-400/10 disabled:opacity-50"
-                            disabled={rescheduling || !newDate || !newTime}
-                            onClick={async () => {
-                              if (!newDate || !newTime) return;
-                              const iso = new Date(
-                                `${newDate}T${newTime}:00`
-                              ).toISOString();
-                              await rescheduleBooking({
-                                id: b.id,
-                                startTime: iso,
-                              });
-                              setEditingId(null);
-                            }}
-                          >
-                            {rescheduling ? 'Saving…' : 'Save'}
-                          </button>
-                        </div>
+                        )}
                       </div>
                     )}
                   </div>

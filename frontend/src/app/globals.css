@@ -50,7 +50,7 @@ body {
   padding: 0;
 }
 
-@theme {
+:root {
   /* colors - primary */
   --color-primary-50: #f0f9ff;
   --color-primary-100: #e0f2fe;
@@ -137,27 +137,33 @@ body {
 }
 
 /* Luxury themed scrollbar */
+/* Apply globally */
+body,
 .scrollbar-luxury {
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: rgba(245, 158, 11, 0.35) rgba(15, 23, 42, 0.6); /* thumb track */
 }
 
+body::-webkit-scrollbar,
 .scrollbar-luxury::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
+body::-webkit-scrollbar-track,
 .scrollbar-luxury::-webkit-scrollbar-track {
   background: rgba(15, 23, 42, 0.6); /* slate-900 w/ opacity */
   border-radius: 9999px;
 }
 
+body::-webkit-scrollbar-thumb,
 .scrollbar-luxury::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #f59e0b, #d97706);
   border-radius: 9999px;
   border: 2px solid rgba(15, 23, 42, 0.8);
 }
 
+body::-webkit-scrollbar-thumb:hover,
 .scrollbar-luxury::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #fbbf24, #f59e0b);
 }

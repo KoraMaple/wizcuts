@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { Star, Award, Users, Clock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function Hero() {
+  const router = useRouter();
   const stats = [
     { icon: Star, value: '5.0', label: 'Rating', suffix: '/5' },
     { icon: Award, value: '15+', label: 'Years', suffix: '' },
@@ -59,7 +61,7 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="inline-flex items-center space-x-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full px-4 py-2 mb-8"
+            className="inline-flex items-center space-x-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full px-4 py-2 mb-8 mt-14"
           >
             <Star className="h-4 w-4 text-amber-400 fill-current" />
             <span className="text-sm text-slate-300 font-medium">
@@ -103,9 +105,7 @@ export default function Hero() {
               whileTap={{ scale: 0.95 }}
               className="bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-xl hover:shadow-amber-400/25 transition-all duration-300 w-full sm:w-auto"
               onClick={() => {
-                document
-                  .querySelector('#booking')
-                  ?.scrollIntoView({ behavior: 'smooth' });
+                router.push('/booking');
               }}
             >
               Book Your Experience

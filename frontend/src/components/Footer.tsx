@@ -11,8 +11,10 @@ import {
   MessageCircle,
   Clock,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function Footer() {
+  const router = useRouter();
   const socialLinks = [
     { icon: Camera, href: 'https://instagram.com/wizcuts', label: 'Instagram' },
     { icon: Users, href: 'https://facebook.com/wizcuts', label: 'Facebook' },
@@ -26,7 +28,7 @@ export default function Footer() {
   const quickLinks = [
     { name: 'Services', href: '#services' },
     { name: 'Gallery', href: '#gallery' },
-    { name: 'Book Now', href: '#booking' },
+    { name: 'Book Now', href: '/booking' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -93,10 +95,15 @@ export default function Footer() {
                     href={link.href}
                     className="text-slate-300 hover:text-amber-400 transition-colors duration-300 flex items-center group"
                     onClick={e => {
-                      e.preventDefault();
-                      document
-                        .querySelector(link.href)
-                        ?.scrollIntoView({ behavior: 'smooth' });
+                      if (link.href.startsWith('#')) {
+                        e.preventDefault();
+                        document
+                          .querySelector(link.href)
+                          ?.scrollIntoView({ behavior: 'smooth' });
+                      } else {
+                        e.preventDefault();
+                        router.push(link.href);
+                      }
                     }}
                   >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-amber-400 transition-all duration-300 mr-0 group-hover:mr-3"></span>

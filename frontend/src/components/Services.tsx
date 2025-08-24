@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui';
+import { useRouter } from 'next/navigation';
 
 const services = [
   {
@@ -60,6 +61,7 @@ const benefits = [
 ];
 
 export default function Services() {
+  const router = useRouter();
   return (
     <section id="services" className="py-20 bg-slate-900/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,9 +135,7 @@ export default function Services() {
                   <Button
                     className="mt-8 w-full"
                     onClick={() => {
-                      document
-                        .querySelector('#booking')
-                        ?.scrollIntoView({ behavior: 'smooth' });
+                      router.push('/booking');
                     }}
                   >
                     Book This Service
