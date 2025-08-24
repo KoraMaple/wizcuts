@@ -92,6 +92,8 @@ export class BookingServiceAdapter implements BookingsRepositoryPort {
       customerEmail: b.customerEmail ?? undefined,
       serviceId: b.serviceId ?? 0,
       barberId: b.barberId,
+      barberName: b.barberName || b.barber?.name || undefined,
+      serviceName: b.serviceName || b.service?.name || undefined,
       startTime: start,
       endTime: end,
       notes: b.notes ?? undefined,

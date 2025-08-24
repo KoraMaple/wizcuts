@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   FaCalendarAlt,
@@ -53,6 +53,48 @@ export default function BookingPage() {
         ? bookingData.barberId
         : undefined,
   });
+
+  // URL param preselection removed by request; we now rely solely on persisted draft restore below.
+
+  // Restore from persisted draft in state manager (preferred over URL params)
+  const draft = useBookingStore((s: { draft: BookingDraft | null }) => s.draft);
+  useEffect(() => {
+    if (!draft) return;
+    const updates: Partial<BookingData> = {};
+
+    // Service: map by name when services are available
+    if (
+      !bookingData.serviceId &&
+      services &&
+      services.length > 0 &&
+      draft.serviceName
+    ) {
+      const svc = services.find(
+        s => s.name.toLowerCase() === draft.serviceName.toLowerCase()
+      );
+      if (svc) updates.serviceId = svc.id;
+    }
+
+    // Barber: only set if exists
+    if (
+      !bookingData.barberId &&
+      barbers &&
+      barbers.length > 0 &&
+      draft.barberId
+    ) {
+      if (barbers.some(b => b.id === draft.barberId))
+        updates.barberId = draft.barberId;
+    }
+
+    // Date & Slot
+    if (!bookingData.date && draft.date) updates.date = draft.date;
+    if (!bookingData.slotStartIso && draft.slotStart)
+      updates.slotStartIso = draft.slotStart;
+
+    if (Object.keys(updates).length > 0) {
+      setBookingData(prev => ({ ...prev, ...updates }));
+    }
+  }, [draft, services, barbers]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -6,6 +6,7 @@ import { Menu, X, Scissors, Phone, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { UserButton, SignInButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface HeaderProps {
   readonly className?: string;
@@ -55,18 +56,20 @@ export default function Header({ className }: HeaderProps) {
             transition={{ delay: 0.2 }}
             className="flex items-center space-x-3"
           >
-            <div className="relative">
-              <Scissors className="h-8 w-8 text-amber-400 transform rotate-45" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full opacity-75 animate-pulse"></div>
-            </div>
-            <div>
-              <h1 className="text-2xl font-display font-bold text-white">
-                WizCuts
-              </h1>
-              <p className="text-xs text-slate-300 font-light tracking-wider">
-                PREMIUM GROOMING
-              </p>
-            </div>
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="relative">
+                <Scissors className="h-8 w-8 text-amber-400 transform rotate-45" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full opacity-75 animate-pulse"></div>
+              </div>
+              <div>
+                <h1 className="text-2xl font-display font-bold text-white">
+                  WizCuts
+                </h1>
+                <p className="text-xs text-slate-300 font-light tracking-wider">
+                  PREMIUM GROOMING
+                </p>
+              </div>
+            </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -117,9 +120,7 @@ export default function Header({ className }: HeaderProps) {
                       whileTap={{ scale: 0.95 }}
                       className="bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-400/25 transition-all duration-300"
                       onClick={() => {
-                        document
-                          .querySelector('#booking')
-                          ?.scrollIntoView({ behavior: 'smooth' });
+                        router.push('/booking');
                       }}
                     >
                       Book Now
@@ -230,9 +231,7 @@ export default function Header({ className }: HeaderProps) {
                           className="w-full bg-gradient-to-r from-amber-400 to-amber-600 text-slate-900 px-6 py-3 rounded-full font-semibold"
                           onClick={() => {
                             setIsOpen(false);
-                            document
-                              .querySelector('#booking')
-                              ?.scrollIntoView({ behavior: 'smooth' });
+                            router.push('/booking');
                           }}
                         >
                           Book Your Appointment

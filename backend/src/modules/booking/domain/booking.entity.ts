@@ -4,6 +4,8 @@ export interface Booking {
   customerEmail?: string;
   serviceId: number;
   barberId: number;
+  barberName?: string;
+  serviceName?: string;
   startTime: Date;
   endTime: Date;
   notes?: string;

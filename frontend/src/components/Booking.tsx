@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, Star, X, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
@@ -12,8 +12,14 @@ import {
   CardTitle,
 } from '@/components/ui';
 import { useToast } from '@/components/ui/toast';
+import { useServices } from '@/features/booking/hooks/useServices';
+import { useRouter } from 'next/navigation';
+import {
+  useBookingStore,
+  type BookingDraft,
+} from '@/features/booking/state/bookingStore';
 
-const services = [
+const defaultServices = [
   {
     id: 'signature-cut',
     name: 'Signature Cut',
@@ -125,6 +131,25 @@ const barbers = [
 
 export default function Booking() {
   const { show } = useToast();
+  const router = useRouter();
+  const { data: apiServices } = useServices();
+  const setDraft = useBookingStore(
+    (s: { setDraft: (d: BookingDraft) => void }) => s.setDraft
+  );
+  // Prefer backend services when available; map to local shape for display
+  const services = useMemo(() => {
+    if (apiServices && apiServices.length > 0) {
+      return apiServices.map(s => ({
+        id: String(s.id),
+        name: s.name,
+        duration: s.durationMinutes,
+        price:
+          Number.parseFloat(String(s.basePrice).replace(/[^0-9.]/g, '')) || 0,
+        description: s.description,
+      }));
+    }
+    return defaultServices;
+  }, [apiServices]);
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedBarber, setSelectedBarber] = useState<string | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -135,8 +160,20 @@ export default function Booking() {
   >('service');
 
   const handleServiceSelect = (serviceId: string) => {
-    setSelectedService(serviceId);
-    setCurrentStep('barber');
+    // Preselect using state manager (Zustand): set a minimal draft with serviceName only.
+    const svc = services.find(s => s.id === serviceId);
+    if (svc) {
+      setDraft({
+        serviceName: svc.name,
+        barberId: 0,
+        barberName: '',
+        date: '',
+        slotStart: '',
+        durationMinutes: 0,
+        price: '',
+      });
+    }
+    router.push('/booking');
   };
 
   const handleBarberSelect = (barberId: string) => {

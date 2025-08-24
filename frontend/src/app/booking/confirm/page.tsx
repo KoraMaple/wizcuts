@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useAuth, useUser, useClerk } from '@clerk/nextjs';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -26,6 +26,7 @@ import {
 export default function BookingConfirmPage() {
   const { user, isLoaded, isSignedIn } = useUser();
   const { getToken } = useAuth();
+  const { redirectToSignIn } = useClerk();
   const router = useRouter();
   const [isConfirming, setIsConfirming] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -56,9 +57,10 @@ export default function BookingConfirmPage() {
     );
   }
 
-  // Redirect to sign-in if not authenticated (backup to middleware)
+  // Redirect to sign-in if not authenticated. After sign-in, return to /booking;
+  // booking page will restore selections from persisted state manager (Zustand).
   if (!isSignedIn) {
-    router.push('/sign-in?redirect_url=/booking/confirm');
+    redirectToSignIn({ redirectUrl: '/sign-in?redirect_url=/booking' });
     return null;
   }
 
